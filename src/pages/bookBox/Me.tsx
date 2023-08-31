@@ -17,7 +17,12 @@ export default function MeBookBox() {
 
             >
                 <Grid style={{ padding: 0, width: '100%', boxShadow: 'none' }}>
-                    <img style={{ margin: 8, width: '-webkit-fill-available', height: 'calc(100% - 16px)', borderRadius: 8 }} alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
+                    <img style={{
+                        margin: 8,
+                        width: '-webkit-fill-available',
+                        height: 'calc(100% - 16px)',
+                        borderRadius: 8
+                    }} alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
                 </Grid>
                 <Grid style={{ padding: '4px 4px', width: '100%', boxShadow: 'none', textAlign: 'center' }}>
                     <>

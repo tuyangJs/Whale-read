@@ -61,7 +61,7 @@ const DocsPage = () => {
   return (
     <div>
       <div style={{ margin: '0 auto' }}>
-        <QueueAnim className={'queue-simple ' + styles.cradFox} type='scale' forcedReplay={false} >
+        <QueueAnim className={'queue-simple ' + styles.cradFox} type='scale' forcedReplay={false} delay={200} >
           {Bookbody.map((book, i) => {
             return (
               <div  key={'book-' + i} >

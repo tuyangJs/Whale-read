@@ -1,0 +1,52 @@
+.notification {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+  }
+  
+  .notification-title {
+    cursor: pointer;
+  }
+  
+  .notification-message {
+    display: none;
+    margin-top: 10px;
+  }
+  
+  .notification-message.expanded {
+    display: block;
+  }
+  @keyframes expand {
+    0% {
+      max-height: 0;
+      overflow: hidden;
+    }
+    100% {
+      max-height: 100%;
+    }
+  }
+  
+  .notification-title {
+    /* 其他样式 */
+    transition: max-height 0.5s ease-in-out;
+  }
+  
+  .notification-title.expanded {
+    max-height: 100%;
+  }
+  
+  .notification-message {
+    /* 其他样式 */
+    transition: max-height 0.5s ease-in-out;
+    max-height: 0;
+    overflow: hidden;
+  }
+  
+  .notification-message.expanded {
+    max-height: 100%;
+  }  
