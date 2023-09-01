@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Outlet, useLocation, history } from 'umi';
+import React, { CSSProperties, useCallback, useState } from 'react';
+import { useLocation, history } from 'umi';
 import {
     AppstoreAddOutlined,
     SettingOutlined,
@@ -14,9 +14,10 @@ import styles from './index.less';
 import HeaderBody from './Header'
 import Logoico from '../assets/logoico.svg'
 import Texty from 'rc-texty';
-import { CompressOutlined, ToolOutlined, SearchOutlined, FormatPainterOutlined } from '@ant-design/icons';
-const { Header, Content, Footer, Sider } = Layout;
-import { Scrollbar } from 'smooth-scrollbar-react';
+import MainBody from './body'
+import { CompressOutlined, ToolOutlined, SearchOutlined } from '@ant-design/icons';
+const { Header, Content, Sider } = Layout;
+
 //@ts-ignore
 document.querySelector("body").style.margin = '0'
 //@ts-ignore
@@ -74,8 +75,10 @@ function getItem(
     label?: React.ReactNode,
     key?: React.Key,
     icon?: React.ReactNode,
-    children?: MenuItem[],
-    type?: 'group' | undefined,
+    children?: MenuItem[]| null,
+    type?: 'group' | undefined | null,
+    className?:string,
+    
 ): MenuItem {
     return {
         key,
@@ -83,28 +86,23 @@ function getItem(
         children,
         label,
         type,
+        className,
     } as MenuItem;
 }
 
 const items: MenuItem[] = [
-
     getItem('📖 阅读', 'grp', null, [
-        getItem('书架', '/', <AppstoreAddOutlined />),
-        getItem('在线搜索', '/soso', <SearchOutlined />)
+        getItem('书架', '/', <AppstoreAddOutlined />,null,null,styles.menu),
+        getItem('在线搜索', '/soso', <SearchOutlined />,null,null,styles.menu)
     ], 'group'),
     getItem('🗃️ 功能', 'grpb', null, [
-        getItem('扩展', '/app', <BuildOutlined />),
-
+        getItem('扩展', '/app', <BuildOutlined />,null,null,styles.menu)
     ], 'group'),
     { type: 'divider' },
-    getItem('设置', '/setweb', <SettingOutlined />)
+    getItem('设置', '/setweb', <SettingOutlined />,null,null,styles.menu)
 
 ]
-/* items.splice(0, 0)
-Menubody.map((key) => {
-    const Mtems = getItem(key.name, key.pat, key.ico, key.children,key.type)
-    items.push(Mtems)
-}) */
+
 
 type ThemeData = {
     borderRadius: number;
@@ -117,12 +115,9 @@ const defaultData: ThemeData = {
 //console.log(theme);
 
 var Webwidth = window.innerWidth;
-let uitime = null
+let handleResizetm: any= null
 const App: React.FC = () => {
-    if (useLocation().pathname === '/welcome') {
-        return (<Outlet />)
-
-    }
+   
     const [location, setLocation] = useState(useLocation().pathname);
     const Menuc = (Webwidth < 820 ? true : false)
     const [collapsed, setCollapsed] = useState<Boolean>(Menuc);
@@ -207,7 +202,7 @@ const App: React.FC = () => {
             // console.log(e.target.innerWidth,Webwidth);
             if (Webwidth >= e.target.innerWidth) {
                 Webwidth = e.target.innerWidth
-                setCollapsed(true)
+                    setCollapsed(true)
             }
         }
         else {
@@ -215,6 +210,7 @@ const App: React.FC = () => {
                 if (Webwidth <= e.target.innerWidth) {
                     Webwidth = e.target.innerWidth
                     setCollapsed(false)
+                  
                 }
             }
         }
@@ -240,18 +236,8 @@ const App: React.FC = () => {
     }
 
 
-    //定义滚动条
-    const Sbr = function HomePage(e: any) {
-        // @ts-ignore
-        return (<Scrollbar plugins={{
-            overscroll: {
-                effect: "bounce"
-            } as const
-        }}
-        > {e.children}</Scrollbar>
-        )
-    }
 
+    var Animate = require('rc-animate');
     //=======初始化完成===========》》
     return (
         <ConfigProvider
@@ -298,11 +284,11 @@ const App: React.FC = () => {
                     />
                 </FloatButton.Group>
             </>
-            <Layout style={{ minHeight: '100vh', }} className={styles.navs} hasSider>
-
-                <Sider trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
-                    <QueueAnim delay={200} className="queue-simple" type={'scaleX'}>
-                        <div className={styles.Logovertical} style={{ alignItems: 'center', display: 'flex', gap: ' 8px', justifyContent: 'center' }}>
+            <Layout style={{ minHeight: '100vh', }} className={styles.navs} hasSider ={true}>
+                {/*  左侧栏 */}
+                <Sider key='a' trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
+                    <QueueAnim type='scaleBig' delay={10}>
+                        <div key='a' className={styles.Logovertical} style={{ alignItems: 'center', display: 'flex', gap: ' 8px', justifyContent: 'center' }}>
                             <img src={Logoico} alt="" style={{ width: 32, height: 'aotu', color: dackTheme.token.colorPrimary }} />
                             {collapsed ? null : (
                                 <Texty
@@ -313,24 +299,22 @@ const App: React.FC = () => {
                             )
                             }
                         </div>
-                        <div key='a' >
-                            <Menu style={{ borderInlineEnd: 0 }} selectedKeys={[location]} defaultSelectedKeys={0} mode="inline" items={items} onSelect={Menonclick} />
+                        <div key='b' >
+                            <Menu style={{ borderInlineEnd: 0 }} selectedKeys={[location]} defaultSelectedKeys={0} mode='vertical' items={items} onSelect={Menonclick} />
                         </div>
                     </QueueAnim>
                 </Sider>
-
+               
                 <Layout style={{ backgroundColor: 'transparent' }} >
+
                     <Header className={styles.Header_region} style={{ height: 46, padding: 0, }} >
 
                         <HeaderBody tite={Webtitle} getSonMsg={{ TabMenu, collapsed }} />
                     </Header>
                     <Content className={styles.mains} style={{ backgroundColor: dackTheme?.token?.colorFillContent }}>
 
-                        <Sbr>
-                            <div style={{ height: "calc(100vh - 46px)", padding: '16px 16px 0 22px' }}>
-                                <Outlet context={{ setTheme: setThemeColor, userColor: themeColor, setifoDack: tabThui, ifoDack: ifoDack }} />
-                            </div>
-                        </Sbr>
+                                <MainBody context={{ setTheme: setThemeColor, userColor: themeColor, setifoDack: tabThui, ifoDack: ifoDack }}  />
+                       
 
                     </Content>
 

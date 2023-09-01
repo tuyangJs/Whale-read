@@ -13,7 +13,7 @@ export default function HomePage(props: any) {
       //theme={dackTheme}
     >
       <Layout style={{padding:8}}>
-        <Header style={{height:52, padding: 0,}}>
+        <Header style={{height:36,lineHeight:0, padding: 0,}}>
           <div style={{ height: 44 }}>
             <Row justify="space-around" align="middle">
               <Col flex="1 1 auto" >
