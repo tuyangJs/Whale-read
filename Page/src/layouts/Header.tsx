@@ -39,7 +39,7 @@ export default function HeaderBody(props: any) {
     const setCollapsed = TabMenu
     return (
         <div style={{ marginTop: 2 }}>
-            <QueueAnim className="queue-simple" type='scaleY' delay={800}  >
+            <QueueAnim className="queue-simple" type='scaleY' delay={600}  >
                 <Row key='a'>
                     <Col flex="1 1 60px" style={{ display: 'flex' }}>
 

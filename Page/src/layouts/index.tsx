@@ -1,28 +1,23 @@
-import React, { CSSProperties, useCallback, useState } from 'react';
-import { useLocation, history } from 'umi';
+import React, { useState } from 'react';
+import {history } from 'umi';
 import {
-    AppstoreAddOutlined,
-    SettingOutlined,
-    BuildOutlined,
     ExpandOutlined,
     ReloadOutlined
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { FloatButton, Layout, Menu, theme, ConfigProvider } from 'antd';
-import QueueAnim from 'rc-queue-anim';
+import { FloatButton, Layout, theme, ConfigProvider } from 'antd';
+import zhCN from 'antd/locale/zh_CN';
 import styles from './index.less';
 import HeaderBody from './Header'
-import Logoico from '../assets/logoico.svg'
-import Texty from 'rc-texty';
 import MainBody from './body'
-import { CompressOutlined, ToolOutlined, SearchOutlined } from '@ant-design/icons';
+import SiderBody from './sider'
+import { CompressOutlined, ToolOutlined } from '@ant-design/icons';
 const { Header, Content, Sider } = Layout;
 
 //@ts-ignore
 document.querySelector("body").style.margin = '0'
 //@ts-ignore
 document.querySelector("body").style.overflow = 'hidden'
-type MenuItem = Required<MenuProps>['items'][number];
+
 
 //夜间配色透明
 const fodackTheme = {
@@ -71,37 +66,7 @@ const nodackTheme = {
     }
 }
 
-function getItem(
-    label?: React.ReactNode,
-    key?: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[]| null,
-    type?: 'group' | undefined | null,
-    className?:string,
-    
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-        className,
-    } as MenuItem;
-}
 
-const items: MenuItem[] = [
-    getItem('📖 阅读', 'grp', null, [
-        getItem('书架', '/', <AppstoreAddOutlined />,null,null,styles.menu),
-        getItem('在线搜索', '/soso', <SearchOutlined />,null,null,styles.menu)
-    ], 'group'),
-    getItem('🗃️ 功能', 'grpb', null, [
-        getItem('扩展', '/app', <BuildOutlined />,null,null,styles.menu)
-    ], 'group'),
-    { type: 'divider' },
-    getItem('设置', '/setweb', <SettingOutlined />,null,null,styles.menu)
-
-]
 
 
 type ThemeData = {
@@ -115,18 +80,15 @@ const defaultData: ThemeData = {
 //console.log(theme);
 
 var Webwidth = window.innerWidth;
-let handleResizetm: any= null
+let handleResizetm: any = null
 const App: React.FC = () => {
-   
-    const [location, setLocation] = useState(useLocation().pathname);
+
+
     const Menuc = (Webwidth < 820 ? true : false)
     const [collapsed, setCollapsed] = useState<Boolean>(Menuc);
     //动态站点标题 
     const [Webtitle, setWebtitle] = useState(localStorage.getItem('Webtitle') ? localStorage.getItem('Webtitle') : '书架');
-    history.listen(({ location: Letlocation, action }) => {
-        setLocation(Letlocation.pathname)
-    }
-    )
+  
     //===================动态站点标题 EDM==================//>>
 
     //@ts-ignore 获取缓存数据
@@ -202,7 +164,7 @@ const App: React.FC = () => {
             // console.log(e.target.innerWidth,Webwidth);
             if (Webwidth >= e.target.innerWidth) {
                 Webwidth = e.target.innerWidth
-                    setCollapsed(true)
+                setCollapsed(true)
             }
         }
         else {
@@ -210,7 +172,7 @@ const App: React.FC = () => {
                 if (Webwidth <= e.target.innerWidth) {
                     Webwidth = e.target.innerWidth
                     setCollapsed(false)
-                  
+
                 }
             }
         }
@@ -225,7 +187,8 @@ const App: React.FC = () => {
     } catch (error) {
         window.addEventListener('resize', handleResize)//监听窗口大小改变
     }
-    const Menonclick = (e: any) => {
+    const Menonclick = (e: any) => { //导航点击事件
+        //e.domEvent.target.style.setProperty ('--active','""')
         localStorage.setItem('Webtitle', e.domEvent.target.innerText)
         setWebtitle(e.domEvent.target.innerText)
         history.push(e.key)
@@ -235,9 +198,6 @@ const App: React.FC = () => {
         setCollapsed(!collapsed)
     }
 
-
-
-    var Animate = require('rc-animate');
     //=======初始化完成===========》》
     return (
         <ConfigProvider
@@ -246,6 +206,7 @@ const App: React.FC = () => {
                 token: dackTheme.token,
                 components: dackTheme.components
             }}
+            locale={zhCN}
         >
             <title>{Webtitle} - 镜芯阅读</title>
 
@@ -284,27 +245,12 @@ const App: React.FC = () => {
                     />
                 </FloatButton.Group>
             </>
-            <Layout style={{ minHeight: '100vh', }} className={styles.navs} hasSider ={true}>
+            <Layout style={{ minHeight: '100vh', }} className={styles.navs} hasSider={true}>
                 {/*  左侧栏 */}
-                <Sider key='a' trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
-                    <QueueAnim type='scaleBig' delay={10}>
-                        <div key='a' className={styles.Logovertical} style={{ alignItems: 'center', display: 'flex', gap: ' 8px', justifyContent: 'center' }}>
-                            <img src={Logoico} alt="" style={{ width: 32, height: 'aotu', color: dackTheme.token.colorPrimary }} />
-                            {collapsed ? null : (
-                                <Texty
-                                    type={'right'}
-                                    mode={'smooth'}
-                                    delay={500}
-                                    className={styles.LogoText} >镜芯阅读 </Texty>
-                            )
-                            }
-                        </div>
-                        <div key='b' >
-                            <Menu style={{ borderInlineEnd: 0 }} selectedKeys={[location]} defaultSelectedKeys={0} mode='vertical' items={items} onSelect={Menonclick} />
-                        </div>
-                    </QueueAnim>
+                <Sider  className={styles.Header_region}  key='a' trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
+                    <SiderBody  className={styles.Header_region_no} collapsed={collapsed} Menonclick={Menonclick}/>
                 </Sider>
-               
+
                 <Layout style={{ backgroundColor: 'transparent' }} >
 
                     <Header className={styles.Header_region} style={{ height: 46, padding: 0, }} >
@@ -313,8 +259,8 @@ const App: React.FC = () => {
                     </Header>
                     <Content className={styles.mains} style={{ backgroundColor: dackTheme?.token?.colorFillContent }}>
 
-                                <MainBody context={{ setTheme: setThemeColor, userColor: themeColor, setifoDack: tabThui, ifoDack: ifoDack }}  />
-                       
+                        <MainBody context={{ setTheme: setThemeColor, userColor: themeColor, setifoDack: tabThui, ifoDack: ifoDack }} />
+
 
                     </Content>
 

@@ -38,7 +38,7 @@ export default function HomePage() {
   const Bookbody = [0, 1, 2, 3, 4, 5, 6, 7]
   return (
     <div style={{ minHeight: "100%" }}>
-      <QueueAnim className="queue-simple" type='scale' delay={200} >
+      <QueueAnim className="queue-simple" type='scale' delay={100} >
         <div style={{
           display: 'flex', 
           width: '100%',

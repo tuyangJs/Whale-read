@@ -4,7 +4,7 @@
 import React from 'react';
 
 export async function getRoutes() {
-  const routes = {"1":{"path":"/","parentId":"@@/global-layout","id":"1"},"2":{"path":"/soso","parentId":"@@/global-layout","id":"2"},"3":{"path":"/app","parentId":"@@/global-layout","id":"3"},"4":{"path":"/setweb","parentId":"@@/global-layout","id":"4"},"5":{"path":"/read","parentId":"@@/global-layout","id":"5"},"6":{"path":"/welcome","parentId":"@@/global-layout","id":"6"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
+  const routes = {"1":{"path":"/","parentId":"@@/global-layout","id":"1"},"2":{"path":"/soso","parentId":"@@/global-layout","id":"2"},"3":{"path":"/app","parentId":"@@/global-layout","id":"3"},"4":{"path":"/setweb","parentId":"@@/global-layout","id":"4"},"5":{"path":"/read","parentId":"@@/global-layout","id":"5"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
   return {
     routes,
     routeComponents: {
@@ -13,7 +13,6 @@ export async function getRoutes() {
 '3': React.lazy(() => import(/* webpackChunkName: "p__app__index" */'@/pages/app/index.tsx')),
 '4': React.lazy(() => import(/* webpackChunkName: "p__setweb" */'@/pages/setweb.tsx')),
 '5': React.lazy(() => import(/* webpackChunkName: "p__read__index" */'@/pages/read/index.tsx')),
-'6': React.lazy(() => import(/* webpackChunkName: "p__welcome" */'@/pages/welcome.tsx')),
 '@@/global-layout': React.lazy(() => import(/* webpackChunkName: "layouts__index" */'F:/Nodejsapp/code/src/layouts/index.tsx')),
 },
   };

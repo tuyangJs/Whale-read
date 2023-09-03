@@ -110,6 +110,13 @@ function newMainwin() {
             }
         })
     })
+    win.hookWindowMessage(278, function (e) {
+        win.setEnabled(false);//窗口禁用菜单
+        setTimeout(() => {
+            win.setEnabled(true);
+        }, 100) //延时太快会立刻启动，太慢会妨碍窗口其他操作，可自行测试最佳时间
+        return true
+    })
     ipcMain.handle('appDataurl', async () => {
         appdata()
         return { url: app.getPath("appData"), userData: userData }

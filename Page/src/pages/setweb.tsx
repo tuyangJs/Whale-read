@@ -133,7 +133,7 @@ export default function set() {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 20 }}
         >
-          <QueueAnim type='right' delay={200} style={{
+          <QueueAnim type='right' delay={100} style={{
             gap: 8,
             display: 'grid',
             alignItems: 'start'

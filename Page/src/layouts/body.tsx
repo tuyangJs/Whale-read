@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'umi';
 import { Scrollbar } from 'smooth-scrollbar-react';
-//定义滚动条
+//定义滚动条；平滑滚动
 const Sbr = function HomePage(e: any) {
     // @ts-ignore
     return (<Scrollbar plugins={{
