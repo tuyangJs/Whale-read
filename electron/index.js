@@ -37,11 +37,31 @@ function newMainwin() {
         }
 
     }
-    const { MicaBrowserWindow, IS_WINDOWS_11 } = require('mica-electron');
+        /* 声明全局变量 */
+    /* 判断是不是win11系统 */
+    const os = require('os');
+var BrowserWindow
+var IS_WINDOWS_11
+if (os.platform() === 'win32' && os.release().startsWith('10')) {
+    const {BrowserWindow:BrowserWindows} = require('electron');
+    BrowserWindow = BrowserWindows
+    IS_WINDOWS_11 = false
+    // 执行您的代码
+} else if (os.platform() === 'win32' && os.release().startsWith('11')) {
+    const { MicaBrowserWindow} = require('mica-electron');
+    IS_WINDOWS_11 =true
+    BrowserWindow = MicaBrowserWindow
+}
+    /* const { MicaBrowserWindow, IS_WINDOWS_11 } = require('mica-electron'); */
     Menu.setApplicationMenu(null)
-    const win = new MicaBrowserWindow(MianWinObj)
+    const win = new BrowserWindow(MianWinObj)
+   /*  win.setAutoTheme() */
+   if(IS_WINDOWS_11){
     win.setAutoTheme()
-    win.loadURL('http://192.168.3.22:8000/')
+}else{
+
+}
+    win.loadURL('http://localhost:8001')
     win.show()
 
     win.once('ready-to-show', async () => {
@@ -68,23 +88,28 @@ function newMainwin() {
      * @param {*} maic 亚克力或者云母
      */
     function tabwinui(err, maic) {
-        if (err == 2) {
-            win.setDarkTheme();
-        }
-        if (err == 1) {
-            win.setLightTheme()
-
-        }
-        if (err == 3) {
-            win.setAutoTheme()
-        }
+    
         if (IS_WINDOWS_11) {
+            if (err == 2) {
+                win.setDarkTheme();
+            }
+            if (err == 1) {
+                win.setLightTheme()
+    
+            }
+            if (err == 3) {
+                win.setAutoTheme()
+            }
             if (maic == undefined || maic) {
                 win.setMicaAcrylicEffect()
             } else {
                 win.setMicaEffect()
             }
+        }else{
+            //Windows 10
+
         }
+
         
         if (nativeTheme.shouldUseDarkColors) {
             win.setTitleBarOverlay({
