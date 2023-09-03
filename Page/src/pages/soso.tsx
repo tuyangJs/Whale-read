@@ -59,7 +59,8 @@ const Bookbody = [
 
 const DocsPage = () => {
    const [ModalApi,Modals] = Modal()
-   
+      console.log(Modal());
+      
   return (
     <div>
       <div style={{ margin: '0 auto' }}>

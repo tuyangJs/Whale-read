@@ -1,9 +1,18 @@
 import React, { useState, ReactElement } from 'react';
 import { Button, Modal } from 'antd';
+interface ModalReturn {
+  Modals: React.FC; // 一个函数组件，渲染Modal
+  show: (err: boolean) => void; // 一个函数，打开或关闭Modal
+}
 
-const App = () => {
-  const [loading, setLoading] = useState(false)
+// 定义一个函数，返回一个数组
+const App = (): ModalReturn[] => {
+  // 定义一个state，表示Modal的状态
   const [open, setOpen] = useState(true)
+  // 定义一个函数，切换Modal的状态
+  const show = (err: boolean) => setOpen(err);
+  const [loading, setLoading] = useState(false)
+
   const handleOk = () => {
     setLoading(true);
     setTimeout(() => {
@@ -14,9 +23,9 @@ const App = () => {
   const handleCancel = () => {
     setOpen(false);
   }
-  const bodym: React.FC = () => {
-    return(
-      <Modal
+  // 定义一个函数组件，渲染Modal
+  const Modals: React.FC = () => (
+    <Modal
       open={open}
       title="Title"
       onOk={handleOk}
@@ -45,15 +54,11 @@ const App = () => {
       <p>Some contents...</p>
       <p>Some contents...</p>
     </Modal>
-      )
-  }
+  )
 
-  return [
-    (err:boolean)=>{setLoading(err)}, bodym('')
-  ]
-
-
-}
+  // 返回一个数组，包含三个元素
+  return [{Modals:Modals,show:show}]
+};
 
 
 export default App;
