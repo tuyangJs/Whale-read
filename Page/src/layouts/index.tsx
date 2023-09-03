@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {history } from 'umi';
+import { history } from 'umi';
 import {
     ExpandOutlined,
     ReloadOutlined
@@ -40,19 +40,7 @@ const fodackTheme = {
         }
     }
 }
-//夜间配色普通
-const ledackTheme = {
-    token: {
-        colorPrimary: '#d89614',
-        colorBgLayout: '#0c0c0c',
-        colorFillContent: '#373737',
-        colorBgContainer: '#141414',
-        // colorBgElevated:'#141414f2',
-        itemActiveBg: '#303030',
-        itemSelectedBg: '#303030',
-        itemHoverBg: '#303030',
-    }
-}
+
 //浅色配色透明
 const nodackTheme = {
     token: {
@@ -88,9 +76,11 @@ const App: React.FC = () => {
     const [collapsed, setCollapsed] = useState<Boolean>(Menuc);
     //动态站点标题 
     const [Webtitle, setWebtitle] = useState(localStorage.getItem('Webtitle') ? localStorage.getItem('Webtitle') : '书架');
-  
+
     //===================动态站点标题 EDM==================//>>
 
+    /* 钩子判断系统win几 */
+    const [winSystem, setwinSystem] = useState(false)
     //@ts-ignore 获取缓存数据
     const themeColors = Hive.filedata('themeColor') //用户配色缓存
     const [themeColor, setThemeColors] = useState(themeColors ? themeColors : '#1677FF')//用户主题预设
@@ -112,6 +102,21 @@ const App: React.FC = () => {
     window.autoUi = function (err: any) {
         setTheme(setThemeui(err))
     }
+
+    /* 判断win10还是win11 */
+    const isWindows11 = () => {
+        const userAgent = navigator.userAgent;
+        return userAgent.includes("Windows NT 10.0; Win64; x64") && userAgent.includes("rv:11.0");
+    };
+    const OSVersion: Function = () => {
+        const userAgent = navigator.userAgent;
+        if (userAgent.includes("Windows NT 10.0; Win64; x64") && userAgent.includes("rv:11.0")) {
+            setwinSystem(true);
+        }
+        return winSystem
+    };
+
+
     //渲染主题
     function setThemeui(err: boolean) {
         let algo
@@ -128,6 +133,7 @@ const App: React.FC = () => {
         if (!err) {
             Thmev.token = nodackTheme.token
         }
+        /* 这里判断win几变量 */
         Thmev.token.colorPrimary = themeColor
         //@ts-ignore 适配云母效果
         if (Hive.filedata('backdrop') == false) {
@@ -247,8 +253,8 @@ const App: React.FC = () => {
             </>
             <Layout style={{ minHeight: '100vh', }} className={styles.navs} hasSider={true}>
                 {/*  左侧栏 */}
-                <Sider  className={styles.Header_region}  key='a' trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
-                    <SiderBody  className={styles.Header_region_no} collapsed={collapsed} Menonclick={Menonclick}/>
+                <Sider className={styles.Header_region} key='a' trigger={null} collapsible style={{ backgroundColor: 'transparent' }} width={210} collapsedWidth={56} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
+                    <SiderBody className={styles.Header_region_no} collapsed={collapsed} Menonclick={Menonclick} />
                 </Sider>
 
                 <Layout style={{ backgroundColor: 'transparent' }} >
