@@ -59,9 +59,6 @@ const Bookbody = [
 
 const DocsPage = () => {
    const {Modals,show} = Modal()[0]
-    //console.log(ModalApi);
-    
-      
   return (
     <div>
       <div style={{ margin: '0 auto' }}>
@@ -71,8 +68,8 @@ const DocsPage = () => {
             return (
               <div key={'book-' + i} >
                 <BookBoxM onclick={
-                  () => {
-                    show(true)
+                  (data) => {
+                    show(data)
                   }
                 } bookinfo={book} />
               </div>

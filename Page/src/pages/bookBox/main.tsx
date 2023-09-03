@@ -21,8 +21,9 @@ const Presets = [
   { state: '完结', color: 'purple' },
   { state: '断更', color: 'yellow' }
 ]
-export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:Function}) {
+export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:object)=> void}) {
   const { name, author, cover, label, intr, chapter, state } = props.bookinfo
+  const {onclick} = props
   const onDownload = () => {
     try {
       fetch(cover)
@@ -83,9 +84,9 @@ export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:Function})
             />
           </Grid>
           <Grid style={{ padding: '6px 8px', width: 263, boxShadow: 'none' }}
-            onClick={function(){
+            onClick={() =>{
               if(onclick){
-                onclick( props.bookinfo )
+                onclick(props.bookinfo)
               }
             }}
           >

@@ -5,6 +5,7 @@ var userData
 let time = null
 let timeTh = null
 let autouims = null
+const parameter = process.argv
 contextBridge.exposeInMainWorld(
     'Hive',
     {
@@ -76,7 +77,8 @@ contextBridge.exposeInMainWorld(
                 console.log(data);
                 eback(data)
             })
-        }
+        },
+       Process:parameter,
     }
 )
 function nedata() {

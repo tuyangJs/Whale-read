@@ -20,7 +20,7 @@ export default function MeBookBox(props: { bookSimpleinfo: BookSimpleInfo }) {
     const onChange = (checked: boolean) => {
         setLoading(!checked);
     };
-    console.log("202030903002",props.bookSimpleinfo);
+   // console.log("202030903002",props.bookSimpleinfo);
     const { title, readed, chapter, state,cover } = props.bookSimpleinfo
     return (
         <a href='./read?key=a'>

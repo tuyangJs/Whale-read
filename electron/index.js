@@ -41,21 +41,22 @@ function newMainwin() {
     /* 判断是不是win11系统 */
     var BrowserWindow
     var IS_WINDOWS_11
-    var os = require('os');
+    const os = require('os');
     var release = os.release(); // 获取系统版本号
     var platform = os.platform(); // 获取系统平台
+    console.log(release, platform);
     if (platform === 'win32' && release.startsWith('10.0.') && parseInt(release.split('.')[2]) >= 22000) {
         const { MicaBrowserWindow } = require('mica-electron');
         IS_WINDOWS_11 = true
         BrowserWindow = MicaBrowserWindow
-       
     } else {
         const { BrowserWindow: BrowserWindows } = require('electron');
         BrowserWindow = BrowserWindows
         IS_WINDOWS_11 = false
     }
-    console.log('Win11 this',IS_WINDOWS_11);
+    console.log('Win11 is', IS_WINDOWS_11);
     Menu.setApplicationMenu(null)
+    MianWinObj.webPreferences.additionalArguments.push(IS_WINDOWS_11 ? 'os=Win11' : 'os=Win10') //告诉前端页面系统是否为win11
     const win = new BrowserWindow(MianWinObj)
     /*  win.setAutoTheme() */
     if (IS_WINDOWS_11) {
@@ -63,6 +64,7 @@ function newMainwin() {
     } else {
 
     }
+
     win.loadURL('http://localhost:8000')
     win.show()
 

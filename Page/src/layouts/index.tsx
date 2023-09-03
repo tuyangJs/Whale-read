@@ -65,22 +65,31 @@ const defaultData: ThemeData = {
     borderRadius: 6,
     colorPrimary: '#00b96b',
 };
-//console.log(theme);
 
+var Windows11 = false
+/* 判断win10还是win11 */
+const isWindows11 = () => {
+    // @ts-ignore 取参数列表
+    const Proce = Hive.Process
+    Proce.map((data: string) => {
+        if ('os=Win11' === data) {
+            Windows11 = true
+            return true
+        }
+    })
+    return Windows11
+}
+isWindows11()
 var Webwidth = window.innerWidth;
 let handleResizetm: any = null
 const App: React.FC = () => {
-
-
+   
     const Menuc = (Webwidth < 820 ? true : false)
-    const [collapsed, setCollapsed] = useState<Boolean>(Menuc);
+    const [collapsed, setCollapsed] = useState < Boolean > (Menuc);
     //动态站点标题 
     const [Webtitle, setWebtitle] = useState(localStorage.getItem('Webtitle') ? localStorage.getItem('Webtitle') : '书架');
 
     //===================动态站点标题 EDM==================//>>
-
-    /* 钩子判断系统win几 */
-    const [winSystem, setwinSystem] = useState(false)
     //@ts-ignore 获取缓存数据
     const themeColors = Hive.filedata('themeColor') //用户配色缓存
     const [themeColor, setThemeColors] = useState(themeColors ? themeColors : '#1677FF')//用户主题预设
@@ -103,19 +112,8 @@ const App: React.FC = () => {
         setTheme(setThemeui(err))
     }
 
-    /* 判断win10还是win11 */
-    const isWindows11 = () => {
-        const userAgent = navigator.userAgent;
-        return userAgent.includes("Windows NT 10.0; Win64; x64") && userAgent.includes("rv:11.0");
-    };
-    const OSVersion: Function = () => {
-        const userAgent = navigator.userAgent;
-        if (userAgent.includes("Windows NT 10.0; Win64; x64") && userAgent.includes("rv:11.0")) {
-            setwinSystem(true);
-        }
-        return winSystem
-    };
-
+    const isWindows11 = Windows11
+    console.log('是否为Win11',isWindows11);
 
     //渲染主题
     function setThemeui(err: boolean) {
@@ -141,7 +139,7 @@ const App: React.FC = () => {
         }
         return Thmev
     }
-    const [dackTheme, setTheme] = useState<any>(setThemeui(dataThemeui(ifoDack)))
+    const [dackTheme, setTheme] = useState < any > (setThemeui(dataThemeui(ifoDack)))
     Hive.winTheme(ifoDack, Hive.filedata('backdrop'))
     const setThemeColor = (e: string) => {
         setThemeColors(e)

@@ -2,15 +2,20 @@ import React, { useState, ReactElement } from 'react';
 import { Button, Modal } from 'antd';
 interface ModalReturn {
   Modals: React.FC; // 一个函数组件，渲染Modal
-  show: (err: boolean) => void; // 一个函数，打开或关闭Modal
+  show: (data: object) => void; // 一个函数，打开或关闭Modal
 }
 
 // 定义一个函数，返回一个数组
 const App = (): ModalReturn[] => {
   // 定义一个state，表示Modal的状态
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   // 定义一个函数，切换Modal的状态
-  const show = (err: boolean) => setOpen(err);
+  const [bookData, setBookData] = useState({})
+  const show = (data: object) => {
+    setBookData(data)
+    setOpen(true)
+  }
+
   const [loading, setLoading] = useState(false)
 
   const handleOk = () => {
@@ -27,7 +32,7 @@ const App = (): ModalReturn[] => {
   const Modals: React.FC = () => (
     <Modal
       open={open}
-      title="Title"
+      title={bookData?.name}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
