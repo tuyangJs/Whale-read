@@ -58,20 +58,21 @@ const Bookbody = [
 ]
 
 const DocsPage = () => {
-   const [ModalApi,Modals] = Modal()
-      console.log(Modal());
+   const {Modals,show} = Modal()[0]
+    //console.log(ModalApi);
+    
       
   return (
     <div>
       <div style={{ margin: '0 auto' }}>
         <QueueAnim className={'queue-simple ' + styles.cradFox} type='scale' forcedReplay={false} delay={100} >
-         {Modals}
+         <Modals/>
           {Bookbody.map((book, i) => {
             return (
               <div key={'book-' + i} >
                 <BookBoxM onclick={
                   () => {
-                    ModalApi(true)
+                    show(true)
                   }
                 } bookinfo={book} />
               </div>
