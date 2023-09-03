@@ -37,31 +37,33 @@ function newMainwin() {
         }
 
     }
-        /* 声明全局变量 */
+    /* 声明全局变量 */
     /* 判断是不是win11系统 */
-    const os = require('os');
-var BrowserWindow
-var IS_WINDOWS_11
-if (os.platform() === 'win32' && os.release().startsWith('10')) {
-    const {BrowserWindow:BrowserWindows} = require('electron');
-    BrowserWindow = BrowserWindows
-    IS_WINDOWS_11 = false
-    // 执行您的代码
-} else if (os.platform() === 'win32' && os.release().startsWith('11')) {
-    const { MicaBrowserWindow} = require('mica-electron');
-    IS_WINDOWS_11 =true
-    BrowserWindow = MicaBrowserWindow
-}
-    /* const { MicaBrowserWindow, IS_WINDOWS_11 } = require('mica-electron'); */
+    var BrowserWindow
+    var IS_WINDOWS_11
+    var os = require('os');
+    var release = os.release(); // 获取系统版本号
+    var platform = os.platform(); // 获取系统平台
+    if (platform === 'win32' && release.startsWith('10.0.') && parseInt(release.split('.')[2]) >= 22000) {
+        const { MicaBrowserWindow } = require('mica-electron');
+        IS_WINDOWS_11 = true
+        BrowserWindow = MicaBrowserWindow
+       
+    } else {
+        const { BrowserWindow: BrowserWindows } = require('electron');
+        BrowserWindow = BrowserWindows
+        IS_WINDOWS_11 = false
+    }
+    console.log('Win11 this',IS_WINDOWS_11);
     Menu.setApplicationMenu(null)
     const win = new BrowserWindow(MianWinObj)
-   /*  win.setAutoTheme() */
-   if(IS_WINDOWS_11){
-    win.setAutoTheme()
-}else{
+    /*  win.setAutoTheme() */
+    if (IS_WINDOWS_11) {
+        win.setAutoTheme()
+    } else {
 
-}
-    win.loadURL('http://localhost:8001')
+    }
+    win.loadURL('http://localhost:8000')
     win.show()
 
     win.once('ready-to-show', async () => {
@@ -88,14 +90,14 @@ if (os.platform() === 'win32' && os.release().startsWith('10')) {
      * @param {*} maic 亚克力或者云母
      */
     function tabwinui(err, maic) {
-    
+
         if (IS_WINDOWS_11) {
             if (err == 2) {
                 win.setDarkTheme();
             }
             if (err == 1) {
                 win.setLightTheme()
-    
+
             }
             if (err == 3) {
                 win.setAutoTheme()
@@ -105,12 +107,12 @@ if (os.platform() === 'win32' && os.release().startsWith('10')) {
             } else {
                 win.setMicaEffect()
             }
-        }else{
+        } else {
             //Windows 10
 
         }
 
-        
+
         if (nativeTheme.shouldUseDarkColors) {
             win.setTitleBarOverlay({
                 color: '#ffffff00',
@@ -125,8 +127,8 @@ if (os.platform() === 'win32' && os.release().startsWith('10')) {
         console.log(err, maic);
     }
 
-    ipcMain.on('winTheme', (e, err,maic) => {
-        tabwinui(err,maic)
+    ipcMain.on('winTheme', (e, err, maic) => {
+        tabwinui(err, maic)
     })
     win.on('will-resize', (e, newBounds) => {
         win.webContents.send('Winresize', {
