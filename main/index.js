@@ -95,13 +95,14 @@ function newMainwin(splashScreen) {
 
     }
     const contents = win.webContents
+    const Mainurl = 'http://localhost:8000'
     contents.on('did-fail-load', (e) => { //导航页面失败
         setTimeout(() => {
-            win.loadURL('http://localhost:8000')
+            win.loadURL(Mainurl)
         },
             2000)
     })
-    win.loadURL('http://localhost:8000')
+    win.loadURL(Mainurl)
 
 
     win.once('ready-to-show', async () => {
