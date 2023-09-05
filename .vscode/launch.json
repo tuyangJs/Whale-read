@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+        "name": "调试项目",
+        "configurations": [
+            "Electron",
+            "页面",
+        ]
+    }
+],
+  "configurations": [
+    {
+      "name": "页面",
+      "type": "node",
+      "request": "launch",
+      "env": {
+        "ELECTRON_RUN_AS_NODE": true
+      },
+      "preLaunchTask": {
+        "type": "npm",
+        "script": "dev"
+      }
+    },
+    {
+      "name": "Electron",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "args": [
+        "."
+      ],
+    },
+  ],
+}

@@ -1,17 +1,48 @@
 // 在主进程中.
+const radytime = process.uptime()
+console.log(radytime, 'ms');
 const { Menu, app, } = require('electron')
+const fs = require('fs');
+const { Script } = require('vm');
+var lodurl = 'data:text/html;charset=UTF-8,'
+console.log(__dirname + '\\lod.html');
+
+
 app.on('window-all-closed', () => {
     app.quit()
 })
 
+fs.readFile(__dirname + '\\lod.html', 'utf8', function (codeInfo, dataStr) {
+    lodurl += encodeURIComponent(dataStr)
+    app.whenReady().then(async () => {
+        const { BrowserWindow } = require('electron');
+        const splashScreen = await new BrowserWindow({
+            width: 520,
+            height: 360,
+            modal: true,
+            //transparent: true,
+            skipTaskbar: true,
+            frame: false,
+            autoHideMenuBar: true,
+            alwaysOnTop: true,
+            resizable: false,
+            // movable: false,
+            backgroundColor: '#222222'
+        });
+        await splashScreen.loadURL(lodurl)
+        newMainwin(splashScreen)
 
-app.whenReady().then(async () => {
-    newMainwin()
+        splashScreen.once('ready-to-show', async () => {
+            console.log((process.uptime() - radytime), 'ms');
+        })
+
+    })
 })
 
+
 //创建主窗口
-function newMainwin() {
-    const preload = __dirname + '/js/Mainwin.js'
+function newMainwin(splashScreen) {
+    const preload = __dirname + '/Mainwin.js'
     const MianWinObj = {
         width: 1126,
         height: 726,
@@ -19,7 +50,6 @@ function newMainwin() {
         minHeight: 500,
         frame: true,
         titleBarStyle: 'hidden',
-        backgroundColor: '#141414',
         show: false,
         titleBarOverlay: {
             height: 46,
@@ -64,12 +94,18 @@ function newMainwin() {
     } else {
 
     }
-
+    const contents = win.webContents
+    contents.on('did-fail-load', (e) => { //导航页面失败
+        setTimeout(() => {
+            win.loadURL('http://localhost:8000')
+        },
+            2000)
+    })
     win.loadURL('http://localhost:8000')
-    win.show()
+
 
     win.once('ready-to-show', async () => {
-        await win.webContents.openDevTools()
+       
     })
     const { nativeTheme } = require('electron')
 
@@ -92,41 +128,46 @@ function newMainwin() {
      * @param {*} maic 亚克力或者云母
      */
     function tabwinui(err, maic) {
+        try {
+            splashScreen.show()
+            setTimeout(function () { return splashScreen.destroy(); }, 500);
+            win.show()
+            win.webContents.openDevTools()
+        } catch (error) {
 
-        if (IS_WINDOWS_11) {
-            if (err == 2) {
-                win.setDarkTheme();
-            }
-            if (err == 1) {
-                win.setLightTheme()
+        }
+        setTimeout(() => {
+            if (IS_WINDOWS_11) {
+                if (err == 2) {
+                    win.setDarkTheme();
+                }
+                if (err == 1) {
+                    win.setLightTheme()
 
+                }
+                if (err == 3) {
+                    win.setAutoTheme()
+                }
+                if (maic == undefined || maic) {
+                    win.setMicaAcrylicEffect()
+                } else {
+                    win.setMicaEffect()
+                }
             }
-            if (err == 3) {
-                win.setAutoTheme()
-            }
-            if (maic == undefined || maic) {
-                win.setMicaAcrylicEffect()
+            if (nativeTheme.shouldUseDarkColors) {
+                win.setTitleBarOverlay({
+                    color: '#ffffff00',
+                    symbolColor: '#fff',
+                })
             } else {
-                win.setMicaEffect()
+                win.setTitleBarOverlay({
+                    color: '#ffffff00',
+                    symbolColor: '#000',
+                })
             }
-        } else {
-            //Windows 10
-
-        }
+        }, 300)
 
 
-        if (nativeTheme.shouldUseDarkColors) {
-            win.setTitleBarOverlay({
-                color: '#ffffff00',
-                symbolColor: '#fff',
-            })
-        } else {
-            win.setTitleBarOverlay({
-                color: '#ffffff00',
-                symbolColor: '#000',
-            })
-        }
-        console.log(err, maic);
     }
 
     ipcMain.on('winTheme', (e, err, maic) => {

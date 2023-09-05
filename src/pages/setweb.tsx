@@ -57,7 +57,7 @@ export default function set() {
     colorlet: colo,
     theme: 0,
   };
-  const [data, setData] = React.useState<ThemeData>(defaultData)
+  const [data, setData] = React.useState < ThemeData > (defaultData)
   const newcolor = (cdata: string[]) => { //保存曾用色
     cdata.map((key, i) => {
       if (i > 0 && key == cdata[0]) {
@@ -96,16 +96,16 @@ export default function set() {
     ifoDackT = '自动'
   }
   const setifoDack = layoutContext.setifoDack
-  const onClick: MenuProps['onClick'] = ({ key }) => {
-    Hive.filedata('ifoDack', key)
+  const onClick: MenuProps['onClick'] = ({ key, domEvent }) => {
     setifoDack(key)
-  };
+    Hive.filedata('ifoDack', key)
+  }
   //@ts-ignore 背景效果
   const backdrops = (Hive.filedata('backdrop') == undefined) ? true : Hive.filedata('backdrop')
 
   console.log(backdrops, Hive.filedata('backdrop'));
 
-  const [backdrop, setBackdrop] = React.useState<boolean>(backdrops)
+  const [backdrop, setBackdrop] = React.useState < boolean > (backdrops)
   const [messageApi, contextHolder] = message.useMessage()
   return (
 

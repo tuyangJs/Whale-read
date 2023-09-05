@@ -262,10 +262,7 @@ const App: React.FC = () => {
                         <HeaderBody tite={Webtitle} getSonMsg={{ TabMenu, collapsed }} />
                     </Header>
                     <Content className={styles.mains} style={{ backgroundColor: dackTheme?.token?.colorFillContent }}>
-
                         <MainBody context={{ setTheme: setThemeColor, userColor: themeColor, setifoDack: tabThui, ifoDack: ifoDack }} />
-
-
                     </Content>
 
                 </Layout>

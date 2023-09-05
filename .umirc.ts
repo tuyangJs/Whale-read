@@ -11,7 +11,6 @@ export default defineConfig({
     { path: "/app", component: "app" },
     { path: "/setweb", component: "setweb" },
     { path: '/read', component: "read" },
-    { path: '/welcome', component: "welcome" }
   ],
   npmClient: 'pnpm',
 }); 
