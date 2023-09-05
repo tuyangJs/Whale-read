@@ -3,10 +3,11 @@ import { history } from 'umi';
 import {
     ExpandOutlined,
     ReloadOutlined,
-    CompressOutlined, 
+    CompressOutlined,
     ToolOutlined,
     BugOutlined,
-    AntDesignOutlined
+    AntDesignOutlined,
+    GithubOutlined
 } from '@ant-design/icons';
 import { FloatButton, Layout, theme, ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -20,8 +21,6 @@ const { Header, Content, Sider } = Layout;
 document.querySelector("body").style.margin = '0'
 //@ts-ignore
 document.querySelector("body").style.overflow = 'hidden'
-
-
 //夜间配色透明
 const fodackTheme = {
     algorithm: [theme.darkAlgorithm,],
@@ -229,19 +228,24 @@ const App: React.FC = () => {
                     icon={<ToolOutlined />}
                     tooltip={<div>快速设置</div>}
                 >
-                    {isdev ?  [
-                    <FloatButton
-                        icon={<BugOutlined />}
-                        tooltip={<div>Open DevTools</div>}
-                        onClick={() => Hive.opendevtools()}
-                        type='primary'
-                    />,
-                    <FloatButton
-                    icon={<AntDesignOutlined />}
-                    tooltip={<div>Ant-Design文档</div>}
-                    onClick={() =>open('https://ant-design.gitee.io/components/overview-cn/')}
-                    type='primary'
-                />
+                    {isdev ? [
+                        <FloatButton
+                            icon={<BugOutlined />}
+                            tooltip={<div>Open DevTools</div>}
+                            onClick={() => Hive.opendevtools()}
+                            type='primary'
+                        />,
+                        <FloatButton
+                            icon={<AntDesignOutlined />}
+                            tooltip={<div>Ant-Design文档</div>}
+                            onClick={() => open('https://ant-design.gitee.io/components/overview-cn/')}
+                            type='primary'
+                        />,
+                        <FloatButton
+                            icon={<GithubOutlined />}
+                            tooltip={<div>Github主页</div>}
+                            onClick={() => open('https://github.com/iyuli/MirrorCore_read')}
+                        />
                     ] : null}
                     <FloatButton
                         tooltip={<div>{!compactUi ? '紧凑界面' : '正常界面'}</div>}
