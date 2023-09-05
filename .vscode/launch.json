@@ -14,9 +14,6 @@
       "name": "页面",
       "type": "node",
       "request": "launch",
-      "env": {
-        "ELECTRON_RUN_AS_NODE": true
-      },
       "preLaunchTask": {
         "type": "npm",
         "script": "dev"
