@@ -42,6 +42,7 @@ fs.readFile(__dirname + '\\lod.html', 'utf8', function (codeInfo, dataStr) {
 
 //创建主窗口
 function newMainwin(splashScreen) {
+    const isdev = app.isPackaged //是否处于正式运行环境
     const preload = __dirname + '/Mainwin.js'
     const MianWinObj = {
         width: 1126,
@@ -61,6 +62,7 @@ function newMainwin(splashScreen) {
             session: 'persist:HiveMcCode',
             partition: 'persist:HiveMcCode',
             v8CacheOption: 'bypassHeatCheck',
+            devTools: !isdev,
             nodeIntegration: true,
             preload: preload,
             additionalArguments: [],
@@ -76,21 +78,22 @@ function newMainwin(splashScreen) {
     var platform = os.platform(); // 获取系统平台
     console.log(release, platform);
     if (platform === 'win32' && release.startsWith('10.0.') && parseInt(release.split('.')[2]) >= 22000) {
-        const { MicaBrowserWindow } = require('mica-electron');
+        const { MicaBrowserWindow } = require('mica-electron')
         IS_WINDOWS_11 = true
         BrowserWindow = MicaBrowserWindow
     } else {
-        const { BrowserWindow: BrowserWindows } = require('electron');
+        const { BrowserWindow: BrowserWindows } = require('electron')
         BrowserWindow = BrowserWindows
         IS_WINDOWS_11 = false
     }
     console.log('Win11 is', IS_WINDOWS_11);
-    Menu.setApplicationMenu(null)
+    Menu.setApplicationMenu(null) //去除默认菜单
     MianWinObj.webPreferences.additionalArguments.push(IS_WINDOWS_11 ? 'os=Win11' : 'os=Win10') //告诉前端页面系统是否为win11
-    const win = new BrowserWindow(MianWinObj)
+    MianWinObj.webPreferences.additionalArguments.push(isdev ? '' : 'isdev') //告诉前端页面当前是否为正式运行环境
+    const win = new BrowserWindow(MianWinObj)//创建窗口
     /*  win.setAutoTheme() */
     if (IS_WINDOWS_11) {
-        win.setAutoTheme()
+        win.setAutoTheme() //设置自动主题
     } else {
 
     }
@@ -99,15 +102,12 @@ function newMainwin(splashScreen) {
     contents.on('did-fail-load', (e) => { //导航页面失败
         setTimeout(() => {
             win.loadURL(Mainurl)
-        },
-            2000)
+        }, 1500)
     })
     win.loadURL(Mainurl)
-
-
-    win.once('ready-to-show', async () => {
-       
-    })
+    /*   win.once('ready-to-show', async () => { //页面准备就绪
+         
+      }) */
     const { nativeTheme } = require('electron')
 
     win.webContents.once('did-frame-finish-load', async e => {
@@ -124,7 +124,6 @@ function newMainwin(splashScreen) {
         quotas: 'syncable'
     })
     /** 切换窗口的模式，夜间与背景透明效果
-     * 
      * @param {*} err 是否为夜间模式
      * @param {*} maic 亚克力或者云母
      */
@@ -133,7 +132,6 @@ function newMainwin(splashScreen) {
             splashScreen.show()
             setTimeout(function () { return splashScreen.destroy(); }, 500);
             win.show()
-            win.webContents.openDevTools()
         } catch (error) {
 
         }
@@ -170,8 +168,10 @@ function newMainwin(splashScreen) {
 
 
     }
-
-    ipcMain.on('winTheme', (e, err, maic) => {
+    ipcMain.on('OpenDevTools', (e, err, maic) => { //打开控制台
+        win.webContents.openDevTools()
+    })
+    ipcMain.on('winTheme', (e, err, maic) => { //更新窗口主题事件
         tabwinui(err, maic)
     })
     win.on('will-resize', (e, newBounds) => {
@@ -196,7 +196,7 @@ function newMainwin(splashScreen) {
     ipcMain.handle('getOStheme', async () => {
         return nativeTheme.shouldUseDarkColors
     })
-    function tabWinui() {
+    function tabWinui() { //更新窗口控制按钮深浅色，这部分由主进程自动进行，无需前端页面参与。
         win.webContents.send('onChange', nativeTheme.shouldUseDarkColors)
         if (nativeTheme.shouldUseDarkColors) {
             win.setTitleBarOverlay({
@@ -222,7 +222,17 @@ function newMainwin(splashScreen) {
     })
 
 }
-
+const exec = require('child_process').exec;
+//新窗口事件处理
+app.on("web-contents-created", (event, contents) => {
+    contents.setWindowOpenHandler(data => {
+        exec('start ' + data.url)
+        console.log(data.url);
+        return {
+            action: 'deny'
+        }
+    })
+})
 //储存数据
 var userData
 appdata()
@@ -230,7 +240,6 @@ function appdata() {
     const fs = require('fs');
     let appDataurl = app.getPath("appData") + '\\codeUserData.json'
     fs.access(appDataurl, err => {
-        console.log('文件存在', appDataurl, err);
         if (err) {
             fs.writeFile(appDataurl, '{"user":{}}', err => {
                 console.log('创建文件', err);

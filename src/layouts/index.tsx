@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { history } from 'umi';
 import {
     ExpandOutlined,
-    ReloadOutlined
+    ReloadOutlined,
+    CompressOutlined, 
+    ToolOutlined,
+    BugOutlined,
+    AntDesignOutlined
 } from '@ant-design/icons';
 import { FloatButton, Layout, theme, ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -10,7 +14,6 @@ import styles from './index.less';
 import HeaderBody from './Header'
 import MainBody from './body'
 import SiderBody from './sider'
-import { CompressOutlined, ToolOutlined } from '@ant-design/icons';
 const { Header, Content, Sider } = Layout;
 
 //@ts-ignore
@@ -67,25 +70,29 @@ const defaultData: ThemeData = {
 };
 
 var Windows11 = false
-/* 判断win10还是win11 */
-const isWindows11 = () => {
+var isdev = false
+const getProce = () => {
     // @ts-ignore 取参数列表
     const Proce = Hive.Process
     Proce.map((data: string) => {
+        /* 判断win10还是win11 */
         if ('os=Win11' === data) {
             Windows11 = true
-            return true
+        }
+        //是开发运行环境
+        if ('isdev' === data) {
+            isdev = true
         }
     })
-    return Windows11
+
 }
-isWindows11()
+getProce()
 var Webwidth = window.innerWidth;
 let handleResizetm: any = null
 const App: React.FC = () => {
-   
+
     const Menuc = (Webwidth < 820 ? true : false)
-    const [collapsed, setCollapsed] = useState < Boolean > (Menuc);
+    const [collapsed, setCollapsed] = useState<Boolean>(Menuc);
     //动态站点标题 
     const [Webtitle, setWebtitle] = useState(localStorage.getItem('Webtitle') ? localStorage.getItem('Webtitle') : '书架');
 
@@ -113,7 +120,7 @@ const App: React.FC = () => {
     }
 
     const isWindows11 = Windows11
-    console.log('是否为Win11',isWindows11);
+    console.log('是否为Win11', isWindows11);
 
     //渲染主题
     function setThemeui(err: boolean) {
@@ -139,7 +146,7 @@ const App: React.FC = () => {
         }
         return Thmev
     }
-    const [dackTheme, setTheme] = useState < any > (setThemeui(dataThemeui(ifoDack)))
+    const [dackTheme, setTheme] = useState<any>(setThemeui(dataThemeui(ifoDack)))
     Hive.winTheme(ifoDack, Hive.filedata('backdrop'))
     const setThemeColor = (e: string) => {
         setThemeColors(e)
@@ -222,6 +229,20 @@ const App: React.FC = () => {
                     icon={<ToolOutlined />}
                     tooltip={<div>快速设置</div>}
                 >
+                    {isdev ?  [
+                    <FloatButton
+                        icon={<BugOutlined />}
+                        tooltip={<div>Open DevTools</div>}
+                        onClick={() => Hive.opendevtools()}
+                        type='primary'
+                    />,
+                    <FloatButton
+                    icon={<AntDesignOutlined />}
+                    tooltip={<div>Ant-Design文档</div>}
+                    onClick={() =>open('https://ant-design.gitee.io/components/overview-cn/')}
+                    type='primary'
+                />
+                    ] : null}
                     <FloatButton
                         tooltip={<div>{!compactUi ? '紧凑界面' : '正常界面'}</div>}
                         icon={!compactUi ? <CompressOutlined /> : <ExpandOutlined />}

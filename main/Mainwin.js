@@ -78,6 +78,9 @@ contextBridge.exposeInMainWorld(
                 eback(data)
             })
         },
+        opendevtools:async()=>{
+            ipcRenderer.send('OpenDevTools')
+        },
        Process:parameter,
     }
 )
