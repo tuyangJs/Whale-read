@@ -1,9 +1,10 @@
 
 import { UnorderedListOutlined, UserOutlined, AlignLeftOutlined, DownloadOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
-import { Typography, Card, Divider, Space, Badge } from 'antd'
+import { Typography, Card, Divider, Space, Badge, Skeleton } from 'antd'
 import { Image } from 'antd';
 import imgerr from '@/assets/imgerr.svg'
 import './main.less';
+import { memo, useEffect, useRef, useState } from 'react';
 const { Title, Text, Paragraph } = Typography;
 const { Grid } = Card
 class Bookvar {
@@ -21,36 +22,34 @@ const Presets = [
   { state: '完结', color: 'purple' },
   { state: '断更', color: 'yellow' }
 ]
-export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:object)=> void}) {
-  const { name, author, cover, label, intr, chapter, state } = props.bookinfo
-  const {onclick} = props
-  const onDownload = () => {
-    try {
-      fetch(cover)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const imgBlob = new Blob([blob])
-          const url = URL.createObjectURL(imgBlob);
-          const imgtype = imgBlob.type.replace('image/', '.')
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = name + '-' + author + ((imgtype == '') ? '.jpg' : imgtype)
-          document.body.appendChild(link);
-          link.click();
-          URL.revokeObjectURL(url);
-          link.remove();
-        });
-    } catch (error) {
 
+function BookBoxM(props: { bookinfo: Bookvar, intbook: any, onclick?: (data: object) => void }) {
+  const bookRef = useRef<HTMLDivElement>(null);
+  const {intbook} = props
+  const { name, author, cover, label, intr, chapter, state ,id} = props.bookinfo
+  const [intrs, setintrs] = useState<string|null>(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver((enteues) => {
+      for (const entry of enteues) {
+        if(entry.isIntersecting){
+          intbook(id,(iny:string)=>{
+            setintrs(iny);
+          })
+        }
+      }
+    })
+    if (bookRef.current) {
+      obs.observe(bookRef.current)
     }
-
-  };
+  }, [])
+  const { onclick } = props
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <Badge.Ribbon
         color={(state == null) ? Presets[0].color : Presets[state].color}
         text={(state == null) ? Presets[0].state : Presets[state].state} placement={'end'}>
         <Card
+          ref={bookRef}
           hoverable
           style={{ width: 416, minHeight: 195, /* marginTop: 16,marginRight: 16  */ }}
           type='inner'
@@ -71,7 +70,6 @@ export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:obje
                   },
                 ) => (
                   <Space size={12} className="toolbar-wrapper" >
-                    <DownloadOutlined onClick={onDownload} />
                     <SwapOutlined rotate={90} onClick={onFlipY} />
                     <SwapOutlined onClick={onFlipX} />
                     <RotateLeftOutlined onClick={onRotateLeft} />
@@ -84,8 +82,8 @@ export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:obje
             />
           </Grid>
           <Grid style={{ padding: '6px 8px', width: 263, boxShadow: 'none' }}
-            onClick={() =>{
-              if(onclick){
+            onClick={() => {
+              if (onclick) {
                 onclick(props.bookinfo)
               }
             }}
@@ -102,10 +100,10 @@ export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:obje
               <Divider plain={true} orientation="left" dashed style={{ margin: '4px 0' }} >
                 <AlignLeftOutlined style={{ marginRight: 10 }} />简介
               </Divider>
-              <Paragraph type="secondary" style={{ margin: 0,  textIndent: '1ch'}} ellipsis={{
+              <Paragraph type="secondary" style={{ margin: 0, textIndent: '1ch' }} ellipsis={{
                 rows: 3
               }}>
-                { intr}
+                {intrs ? intrs : <Skeleton active={true} title={false} paragraph={{ rows: 2 }} />}
               </Paragraph >
               <Divider dashed style={{ margin: '5px 0' }} />
               <Text ellipsis={{ tooltip: true }}><UnorderedListOutlined style={{ marginRight: 5 }} />{chapter}</Text>
@@ -116,3 +114,4 @@ export default function BookBoxM(props: { bookinfo: Bookvar ,onclick?:(data:obje
     </Space>
   )
 }
+export default  memo(BookBoxM)

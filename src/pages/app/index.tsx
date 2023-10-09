@@ -48,7 +48,7 @@ const App: React.FC = () => {
   return (
     <div className="example">
       {contextHolder}
-      <QueueAnim type='scale' delay={200} >
+      <QueueAnim type='scale' delay={10} >
         <div key='a'>
           <Row style={{ marginTop: 10 }}>
             <Col flex="1 1 280px">

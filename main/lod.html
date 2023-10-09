@@ -1,3 +1,6 @@
+<html>
+
+<head></head>
 
 <body>
     <style>
@@ -10,29 +13,33 @@
             -webkit-font-smoothing: antialiased;
             overflow: hidden;
             -webkit-app-region: drag;
+            background-color: transparent;
         }
 
-        svg {
+        img {
             width: 100%;
-            height: 100%
+            height: auto;
+            transform: scale(0.6);
+            border-radius: 50%;
+            position: absolute;
+            animation: imgam 1.8s infinite;
+            animation-timing-function: cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
-        img{
-            width: 68px;
-        }
+
         #wrapper {
-            border-radius: 20px;
+            border-radius: 50%;
             background: hsl(0deg 0% 30.07%/72%);
             backdrop-filter: saturate(180%)blur(20px);
             border: 2px solid;
+            width: 126px;
+            height: 126px;
             border-color: #a9a9a9;
-            padding: 20px;
-            width: 220px;
-            height: 160px;
+            padding: 10px;
             position: absolute;
             top: 50%;
             left: 50%;
-            margin-top: -110px;
-            margin-left: -120px;
+            margin-top: -95px;
+            margin-left: -75px;
             font-size: larger;
             display: flex;
             flex-wrap: nowrap;
@@ -50,128 +57,77 @@
             perspective: 800px
         }
 
-        .inner {
-            position: absolute;
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%
+        .loader-33 {
+            width: 108px;
+            height: 108px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            -webkit-animation: loader33 0.9s infinite;
         }
 
-        .inner.one {
-            left: 0%;
-            top: 0%;
-            animation: rotate-one 1s linear infinite;
-            border-bottom: 3px solid #efeffa
+        .loading-text {
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            position: relative;
+            top: 73vh;
         }
 
-        .inner.two {
-            right: 0%;
-            top: 0%;
-            animation: rotate-two 1s linear infinite;
-            border-right: 3px solid #efeffa
-        }
-
-        .inner.three {
-            right: 0%;
-            bottom: 0%;
-            animation: rotate-three 1s linear infinite;
-            border-top: 3px solid #efeffa
-        }
-
-        @keyframes rotate-one {
+        @-webkit-keyframes imgam {
             0% {
-                transform: rotateX(35deg)rotateY(-45deg)rotateZ(0)
+                -webkit-transform: scale(0.6);
+            }
+
+            50% {
+                -webkit-transform: scale(0.56);
             }
 
             100% {
-                transform: rotateX(35deg)rotateY(-45deg)rotateZ(360deg)
+                -webkit-transform: scale(0.6);
             }
         }
 
-        @keyframes rotate-two {
+        @-webkit-keyframes loader33 {
             0% {
-                transform: rotateX(50deg)rotateY(10deg)rotateZ(0)
+                -webkit-transform: rotate(0deg);
             }
 
             100% {
-                transform: rotateX(50deg)rotateY(10deg)rotateZ(360deg)
+                -webkit-transform: rotate(360deg);
             }
         }
 
-        @keyframes rotate-three {
+        .loader-text {
+            color: #283041;
+            opacity: .2;
+            animation: lodText 1.6s ease-out infinite alternate;
+        }
+
+        @keyframes lodText {
             0% {
-                transform: rotateX(35deg)rotateY(55deg)rotateZ(0)
+                opacity: .3;
             }
 
             100% {
-                transform: rotateX(35deg)rotateY(55deg)rotateZ(360deg)
+                opacity: .85;
             }
         }
-    </style><svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        <defs>
-            <radialGradient id="Gradient1" cx="50%" cy="50%" fx="50%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="34s" values="0%;1%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(255, 0, 255, 1)" />
-                <stop offset="100%" stop-color="rgba(255, 0, 255, 0)" />
-            </radialGradient>
-            <radialGradient id="Gradient2" cx="50%" cy="50%" fx="10%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="23.5s" values="0%;1%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(255, 255, 0, 1)" />
-                <stop offset="100%" stop-color="rgba(255, 255, 0, 0)" />
-            </radialGradient>
-            <radialGradient id="Gradient3" cx="50%" cy="50%" fx="50%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="21.5s" values="0%;1%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(0, 255, 255, 1)" />
-                <stop offset="100%" stop-color="rgba(0, 255, 255, 0)" />
-            </radialGradient>
-
-            <radialGradient id="Gradient4" cx="50%" cy="50%" fx="50%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="23s" values="0%;5%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(0, 255, 0, 1)" />
-                <stop offset="100%" stop-color="rgba(0, 255, 0, 0)" />
-            </radialGradient>
-            <radialGradient id="Gradient5" cx="50%" cy="50%" fx="10%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="24.5s" values="0%;5%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(0,0,255, 1)" />
-                <stop offset="100%" stop-color="rgba(0,0,255, 0)" />
-            </radialGradient>
-            <radialGradient id="Gradient6" cx="50%" cy="50%" fx="50%" fy="50%" r=".5">
-                <animate attributeName="fx" dur="25.5s" values="0%;5%;0%" repeatCount="indefinite" />
-                <stop offset="0%" stop-color="rgba(255,0,0, 1)" />
-                <stop offset="100%" stop-color="rgba(255,0,0, 0)" />
-            </radialGradient>
-        </defs>
-
-        <rect x="0" y="0" width="200%" height="200%" fill="url(#Gradient1)">
-            <animate attributeName="x" dur="20s" values="0%;50%;0%" repeatCount="indefinite" />
-            <animate attributeName="y" dur="21s" values="0%;50%;0%" repeatCount="indefinite" />
-            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="17s"
-                repeatCount="indefinite" />
-        </rect>
-        <rect x="0" y="0" width="100%" height="200%" fill="url(#Gradient2)">
-            <animate attributeName="x" dur="23s" values="50%;-25%;50%" repeatCount="indefinite" />
-            <animate attributeName="y" dur="24s" values="50%;-25%;50%" repeatCount="indefinite" />
-            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="18s"
-                repeatCount="indefinite" />
-        </rect>
-        <rect x="0" y="0" width="100%" height="200%" fill="url(#Gradient3)">
-            <animate attributeName="x" dur="25s" values="0%;75%;0%" repeatCount="indefinite" />
-            <animate attributeName="y" dur="26s" values="0%;25%;0%" repeatCount="indefinite" />
-            <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="19s"
-                repeatCount="indefinite" />
-        </rect>
-    </svg>
+    </style>
     <div id="wrapper">
+        <img src="logo.png" alt="">
         <div id="loader">
-            <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjkzOTE4NDQwMzU5IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE5ODMiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHBhdGggZD0iTTQ2MC40NTg2NjcgNzg5LjMzMzMzM2MtNC44NDI2NjctMzQuMDY5MzMzLTE2Ljc2OC01NC43Mi0zNS43NzYtNjEuOTMwNjY2LTE1LjIxMDY2Ny01Ljc4MTMzMy0zOS4wNC0xMC45MDEzMzMtMTEwLjA4IDEzLjMzMzMzM0MyNjcuMiA3NTYuOTA2NjY3IDIwNS4wMTMzMzMgNzczLjEyIDEyOCA3ODkuMzMzMzMzbC0yMS4xODQtNDMuMDA4YzQzLjAwOC05LjA2NjY2NyA4Mi4yMTg2NjctMjAuMTgxMzMzIDExNy42NTMzMzMtMzMuMzQ0IDUzLjE2MjY2Ny0xOS43MTIgMTM1LjkxNDY2Ny00NC41MjI2NjcgMTkzLjcwNjY2Ny01MC44NTg2NjYgMzguNTA2NjY3LTQuMjI0IDY4Ljg2NCA4LjQwNTMzMyA5MS4wOTMzMzMgMzcuODg4bDMuMjIxMzM0IDkuMjM3MzMzIDkuOTg0IDAuMDQyNjY3IDkuOTYyNjY2LTAuMDQyNjY3IDMuMjY0LTkuMjM3MzMzYzI4LjY1MDY2Ny0zMS4zNiA2Mi4yMjkzMzMtNDQuOTQ5MzMzIDEwMC43MzYtNDAuNzI1MzM0IDU3Ljc5MiA2LjMzNiAxMzAuOTAxMzMzIDMzLjk4NCAxODQuMDQyNjY3IDUzLjY5NiAzNS40MTMzMzMgMTMuMTYyNjY3IDc0LjY2NjY2NyAyNC4yNzczMzMgMTE3LjY1MzMzMyAzMy4zNDRMOTE2Ljk0OTMzMyA3ODkuMzMzMzMzYy03Ny4wMTMzMzMtMTYuMjEzMzMzLTEzOS4yMjEzMzMtMzIuNDI2NjY3LTE4Ni41ODEzMzMtNDguNTk3MzMzLTcxLjA0LTI0LjIzNDY2Ny05NC44OTA2NjctMTkuMTE0NjY3LTExMC4wOC0xMy4zMzMzMzMtMTkuMDI5MzMzIDcuMjEwNjY3LTMwLjkzMzMzMyAyNy44NjEzMzMtMzUuNzc2IDYxLjkzMDY2NnoiIGZpbGw9IiNGRjk2MkEiIHAtaWQ9IjE5ODQiPjwvcGF0aD48cGF0aCBkPSJNNDUwLjQ3NDY2NyA3MjAuMjEzMzMzYzE0LjAxNiAxMi45MDY2NjcgMjMuNTUyIDI5LjA1NiAyOC42MDggNDguNDY5MzM0aDg3LjE2OGMxNC43NDEzMzMtNDQuNDM3MzMzIDM5LjIxMDY2Ny02NS42IDczLjQyOTMzMy02My41MzA2NjcgNTEuMzA2NjY3IDMuMTM2IDExOS43MjI2NjcgMjguOTkyIDE1NC4yODI2NjcgNDAuMDIxMzMzIDIyLjk1NDY2NyA3LjMzODY2NyA2Ni4xOTczMzMgMTcuNDkzMzMzIDEyOS43MDY2NjYgMzAuNTA2NjY3bC02LjcyIDEzLjY1MzMzM2MtNzcuMDEzMzMzLTE2LjIxMzMzMy0xMzkuMjIxMzMzLTMyLjQyNjY2Ny0xODYuNTgxMzMzLTQ4LjU5NzMzMy03MS4wNC0yNC4yMzQ2NjctOTQuODkwNjY3LTE5LjExNDY2Ny0xMTAuMDgtMTMuMzMzMzMzLTE5LjAyOTMzMyA3LjIxMDY2Ny0zMC45MzMzMzMgMjcuODYxMzMzLTM1Ljc3NiA2MS45MzA2NjZoLTEyNC4wNTMzMzNjLTQuODQyNjY3LTM0LjA2OTMzMy0xNi43NjgtNTQuNzItMzUuNzc2LTYxLjkzMDY2Ni0xNS4yMTA2NjctNS43ODEzMzMtMzkuMDQtMTAuOTAxMzMzLTExMC4wOCAxMy4zMzMzMzMtNDQuNTg2NjY3IDE1LjIzMi0xMDIuMzE0NjY3IDMwLjQ2NC0xNzMuMTYyNjY3IDQ1LjczODY2N0wxMjggNzg5LjMzMzMzM2wtNi4zNzg2NjctMTIuOTQ5MzMzIDUuMjI2NjY3LTEuMjU4NjY3YzcxLjk3ODY2Ny0xNy40MDggMTE2LjIyNC0yOC44ODUzMzMgMTMyLjc1NzMzMy0zNC40NTMzMzMgMjUuNzA2NjY3LTguNjgyNjY3IDk3Ljg3NzMzMy0zMy4zODY2NjcgMTEyLjg3NDY2Ny0zNS41MiAxNS4wMTg2NjctMi4xMTIgNTYuOTgxMzMzLTQuMjg4IDc3Ljk5NDY2NyAxNS4wNjEzMzN6IiBmaWxsPSIjRjA1NDAwIiBwLWlkPSIxOTg1Ij48L3BhdGg+PHBhdGggZD0iTTUxMi43MDQgMjYyLjIyOTMzM2w5Ljk2MjY2NyAwLjEyOFY3MDkuOTczMzMzbC05Ljk2MjY2Ny0wLjA2NGMtMjYuNzk0NjY3LTQ0LjgtNzcuMDU2LTU3LjkyLTE1MC43NDEzMzMtMzkuMzgxMzMzQzI1MS40MTMzMzMgNjk4LjMyNTMzMyAxOTMuNDUwNjY3IDczNS43ODY2NjcgMTA2LjY2NjY2NyA3NDYuNjY2NjY3YzYuNTkyLTQyLjM2OCAyNi45MjI2NjctMTg3LjczMzMzMyA2MS4wMTMzMzMtNDM2LjEzODY2NyAxMDQuODUzMzMzLTM1LjYyNjY2NyAxODIuNDQyNjY3LTU5LjIgMjMyLjc2OC03MC42NTYgNTAuMzI1MzMzLTExLjQ1NiA4Ny43NDQtNC4wMTA2NjcgMTEyLjI1NiAyMi4zNTczMzN6IiBmaWxsPSIjRkZEM0E1IiBwLWlkPSIxOTg2Ij48L3BhdGg+PHBhdGggZD0iTTUyMi42MjQgNzA5Ljk3MzMzM2wtOS45Mi0wLjA2NGMtMjQuOTYtNDIuMDI2NjY3LTc0LjMwNC01My43Ni0xNDguMDEwNjY3LTM1LjI0MjY2NkMyNTQuMTQ0IDcwMi40NjQgMTk3LjkzMDY2NyA3MzMuOTczMzMzIDEwNi42NjY2NjcgNzQ2LjY2NjY2N2M2LjU5Mi00Mi4zNjggMjYuOTIyNjY3LTE5NC44NTg2NjcgNjEuMDEzMzMzLTQ1Ny40NzIgMTA0Ljg1MzMzMy0zNS42MjY2NjcgMTgyLjQ0MjY2Ny01OS4yIDIzMi43NjgtNzAuNjU2IDUwLjMyNTMzMy0xMS40NTYgODcuNzQ0LTQuMDEwNjY3IDExMi4yNTYgMjIuMzU3MzMzbDkuOTIgMC4xMDY2NjcgOS45NjI2NjctMC4xMDY2NjdjMjMuNDg4LTI1LjI1ODY2NyA1OC44MzczMzMtMzMuMTUyIDEwNi4wMjY2NjYtMjMuNjhsNi4yMjkzMzQgMS4zMjI2NjdjNTAuMzI1MzMzIDExLjQ1NiAxMjcuOTE0NjY3IDM1LjAwOCAyMzIuNzg5MzMzIDcwLjY1NiAzNC4wNjkzMzMgMjYyLjYxMzMzMyA1NC40IDQxNS4xMDQgNjAuOTkyIDQ1Ny40NzItODYuNzg0LTEwLjgzNzMzMy0xNDQuNzQ2NjY3LTQ4LjM0MTMzMy0yNTUuMjk2LTc2LjE2LTczLjY4NTMzMy0xOC41MTczMzMtMTIzLjk0NjY2Ny01LjM5NzMzMy0xNTAuNzQxMzMzIDM5LjQwMjY2NmwtOS45MiAwLjA2NGgtMC4wNDI2Njd6IiBmaWxsPSIjRkZEM0E1IiBwLWlkPSIxOTg3Ij48L3BhdGg+PHBhdGggZD0iTTg3Ny42MzIgMjg5LjE5NDY2N2MzNC4wNjkzMzMgMjYyLjYxMzMzMyA1NC40IDQxNS4xMDQgNjAuOTkyIDQ1Ny40NzItNTYuMjM0NjY3LTcuMDQtMTAwLjM3MzMzMy0yNS4yNTg2NjctMTU0LjU2LTQ0Ljc3ODY2N2wtMzYuNDE2LTQ1NC45OTczMzNhNDU3Mi41ODY2NjcgNDU3Mi41ODY2NjcgMCAwIDEgMTI5Ljk4NCA0Mi4zMDR6IG0tNTc5LjkyNTMzMy00Mi4zMjUzMzRMMjYwLjk5MiA3MDUuNDkzMzMzQzIwOC40MjY2NjcgNzIyLjk4NjY2NyAxNjQuNjA4IDczOC42MDI2NjcgMTA2LjY2NjY2NyA3NDYuNjY2NjY3YzYuNTkyLTQyLjM2OCAyNi45MjI2NjctMTk0Ljg1ODY2NyA2MS4wMTMzMzMtNDU3LjQ3MmE0NTcxLjQzNDY2NyA0NTcxLjQzNDY2NyAwIDAgMSAxMzAuMDI2NjY3LTQyLjMyNTMzNHoiIGZpbGw9IiNGRkUzQjYiIHAtaWQ9IjE5ODgiPjwvcGF0aD48cGF0aCBkPSJNNjE4LjcwOTMzMyAyMTQuMTg2NjY3bDE4LjY4OCA0NDguNjRjLTQ3LjEwNC0zLjI0MjY2Ny04MS4xNzMzMzMgMTEuMDkzMzMzLTEwMi4yMjkzMzMgNDIuOTg2NjY2bC0yLjU2IDQuMDk2LTkuOTQxMzMzIDAuMDY0aC0wLjA0MjY2N2wtOS45Mi0wLjA2NGMtMTkuNzU0NjY3LTMzLjIxNi01NC42OTg2NjctNDcuNTMwNjY3LTEwNC44OTYtNDIuOTAxMzMzbDE4LjgzNzMzMy00NTIuODQyNjY3YzM3LjMzMzMzMy0zLjczMzMzMyA2Ni4wMDUzMzMgNS4xNjI2NjcgODYuMDU4NjY3IDI2LjczMDY2N2w5LjkyIDAuMTA2NjY3IDkuOTYyNjY3LTAuMTA2NjY3YzIwLjA1MzMzMy0yMS41NjggNDguNzY4LTMwLjQ4NTMzMyA4Ni4xMjI2NjYtMjYuNzMwNjY3eiIgZmlsbD0iI0ZGQzU4OSIgcC1pZD0iMTk4OSIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC5zZWFyY2hfaW5kZXguMC5pNC4yYTU1M2E4MWI3QzdobiI+PC9wYXRoPjxwYXRoIGQ9Ik01MTIgMjQwLjU1NDY2N2gyMS4zMzMzMzN2NDY5LjMzMzMzM2gtMjEuMzMzMzMzeiIgZmlsbD0iI0ZGOTYyQSIgcC1pZD0iMTk5MCI+PC9wYXRoPjwvc3ZnPg==" />
-      
+            <div class="loader-33">
+                <div>
+                </div>
+            </div>
         </div>
-        <a>项目正在启动</a>
-        <div class="loader">
-            <div class="inner one"></div>
-            <div class="inner two"></div>
-            <div class="inner three"></div>
-        </div>
+
+    </div>
+    <div class="loading-text">
+        <div class="loader-text">初始化中</div>
     </div>
 </body>
+
+</html>

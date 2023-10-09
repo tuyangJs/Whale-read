@@ -1,0 +1,25 @@
+.dragger {
+    width: 100%;
+    display: block;
+    div>span {
+        padding: 4px !important;
+    }
+}
+
+.upbookactive {
+    animation: doefile 1.25s infinite;
+}
+
+@keyframes doefile {
+    0% {
+        transform: scale(1) rotate(-4deg);
+    }
+
+    10% {
+        transform: scale(1.25) rotate(4deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}

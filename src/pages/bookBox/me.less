@@ -1,3 +1,126 @@
-.cardBox{
-    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+.moleskine-notebook {
+    height: 220px;
+    width: 165px;
+    position: relative;
+    transition: .5s linear;
+    border-radius: 5px 15px 15px 5px;
+    transform-origin: left center 0px;
+    display: inline-block;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.notebook-cover {
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(211, 211, 211, 0.1) 5%,
+            rgba(255, 255, 255, 0.15) 5%,
+            rgba(255, 255, 255, 0.1) 9%,
+            rgba(0, 0, 0, 0.01) 100%),
+        var(--imgurl), #abc3b5;
+
+    height: inherit;
+    width: inherit;
+    background-size: contain;
+    position: absolute;
+    border-radius: 5px 15px 15px 5px;
+    z-index: 10;
+    transition: .9s linear;
+    transform-style: preserve-3d;
+    transform-origin: left center 0px;
+}
+
+.notebook-cover:before {
+    content: ;
+    position: absolute;
+    width: 10px;
+    height: calc(100% + 2px);
+    top: -1px;
+    z-index: 100;
+    border-radius: 2px;
+    right: 25px;
+    transition: 2s ease;
+}
+
+.notebook-cover.blue:before {
+    background: linear-gradient(to right, #1e606e 0%, #2e95aa 12%, #1e606e 25%, #2e95aa 37%, #1e606e 50%, #2e95aa 62%, #1e606e 75%, #2e95aa 87%, #1e606e 100%);
+}
+
+.moleskine-notebook:hover {
+
+    /*   transform: rotateZ(-1deg); */
+    .notebook-cover {
+        transform: rotateY(-65deg);
+        z-index: 999;
+        box-shadow: 20px 10px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .notebook-page>li:nth-child(1) {
+        transform: rotateY(-20deg);
+        transition-duration: 1.3s;
+    }
+
+    li:nth-child(2) {
+        transform: rotateY(-15deg);
+        transition-duration: 1.7s;
+    }
+}
+
+
+.notebook-skin {
+    height: 26px;
+    background: rgb(96 96 96);
+    border-radius: 0px 14px 0px 10px;
+    padding: 4px 6px;
+    font-size: 12px;
+    right: 0;
+    position: fixed;
+    z-index: 10;
+    color: #ffffff;
+    text-align: center;
+}
+.cntext{
+    writing-mode: vertical-rl;
+}
+.notebook-page {
+    margin: 0px;
+    height: 100%;
+    list-style: none;
+    width: inherit;
+    position: absolute;
+    padding: 8px;
+    z-index: 0;
+    border-radius: 5px 16px 16px 5px;
+    transform-style: preserve-3d;
+    li {
+        width: 100%;
+        height: 100%;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        transform-origin: left center;
+        -webkit-transition-property: transform;
+        -moz-transition-property: transform;
+        transition-property: transform;
+        -webkit-transition-timing-function: ease;
+        -moz-transition-timing-function: ease;
+        transition-timing-function: ease;
+        background: -webkit-linear-gradient(left, #f3ece4 0%, #fbf5dc 100%);
+        border-radius: 15px;
+        box-shadow: inset 0px -1px 2px rgba(50, 50, 50, 0.1), inset -1px 0px 1px rgba(150, 150, 150, 0.2);
+        position: absolute;
+        transition-duration: 0.8s;
+        top: 0;
+        left: 0;
+        transform-style: preserve-3d;
+    }
+}
+
+.notebook-skin:before {
+    content: ;
+    position: absolute;
+    width: 100%;
+    height: 15px;
+    left: 0;
+    bottom: 0;
+    background: #cddc39;
 }

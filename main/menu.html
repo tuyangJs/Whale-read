@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        --dark-txt: #000;
+        --alt-txt: #fff;
+        --med-dark: #111;
+        --txt-col: #000;
+        --med-txt: #3c3c3c;
+        --comp-txt: #ddd;
+        --comp-clr: #e6e6e6;
+        --gray-txt: #555;
+        --sat-txt: #777;
+        --clrPrm: #0067c0;
+        --wintheme: #eee;
+
+        --bg1: rgba(249, 249, 249, .65);
+        --bg1a: rgba(248, 248, 248, .96);
+        --bg2: rgba(0, 0, 0, .6);
+        --hoverbg:#232323ad;
+        --themeText: var(--med-dark);
+        --themebg: var(--bg1a);
+        --txt_clr-rgb: 0 0 0;
+        --base_bg-rgb: 243 243 243;
+        --fakeMica: #f3f3f3 radial-gradient(#eff4f9 75%, #f3f3f3 100%) no-repeat fixed;
+        user-select: none;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    /* 根据系统的深色模式响应深色变量 */
+    @media (prefers-color-scheme: dark) {
+        body {
+            --themebg: var(--hoverbg);
+             --themeText: var(--comp-txt);
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        body {
+            --themebg: var(--bg1a);
+            --themeText: var(--dark-txt);
+        }
+    }
+
+    .actmenu {
+        position: absolute;
+        background: transparent;
+        -webkit-backdrop-filter: saturate(2) blur(20px);
+        backdrop-filter: saturate(2) blur(20px);
+        z-index: 10000;
+        opacity: 1;
+        pointer-events: all;
+        border-radius: 8px;
+        transition: opacity .1s ease;
+        min-width: 200px;
+        transition: all 0.38s cubic-bezier(0, 0, 0.2, 1);
+        color: var(--themeText);
+    }
+
+    .menuhr {
+        position: relative;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #ccc5;
+        margin: 4px 0;
+    }
+
+    .menuopt {
+        height: 28px;
+        box-sizing: border-box;
+        position: relative;
+        padding: 4px 6px;
+        font-size: 15px;
+        cursor: default;
+        margin: 6px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        overflow: hidden;
+        transition: background-color 0.2s linear;
+        .spcont {
+            width: 16px;
+            margin-right: 12px;
+            height: 16px;
+        }
+
+        .micon {
+            position: absolute;
+            font-size: 12px;
+        }
+
+        .rightIcon {
+            right: 8px;
+        }
+    }
+
+    :root {
+        --px: 0;
+        --py: 0;
+    }
+
+    .menuopt.disable {
+        color: #999999;
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none
+    }
+
+
+    .menuhr-box {
+        padding: 0px 6px;
+    }
+
+    .menuopt:before,
+    .menuopt:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: opacity 0.1s linear;
+    }
+
+    .menuopt:before {
+        width: 130px;
+        height: 100px;
+        background: radial-gradient(circle at center, #FFF 0%, transparent 66%);
+        opacity: 0;
+        mix-blend-mode: screen;
+        transform: translate(calc(var(--px) * 1px), calc(var(--py) * 1px)) translate(-50%, -50%);
+    }
+
+    .menuopt:hover {
+        background: var(--themebg);
+    }
+
+    .menuopt:hover:before {
+        opacity: 0.6;
+    }
+
+    .menuopt:hover:after {
+        opacity: 0.85;
+        transition-delay: 0s;
+    }
+
+
+    .menuopt:after {
+        background: inherit;
+        margin: 2px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0;
+        transition-delay: 0.05s;
+    }
+</style>
+
+<body scroll="no">
+    <div class="actmenu" id="actmenu" style="top:-800px">
+        <div class="menuopt" data-action="refresh">
+            <div class="spcont">
+                <div class="uicon prtclk"><svg viewBox="0 0 64 64" data-flip="false" data-invert="false"
+                        data-rounded="false" style="width: 16px; height: 16px;">
+                        <path stroke="currentColor" fill="currentColor"
+                            d="M52.36 2.42c1.13-.78 3.1.11 3.01 1.58.16 4.63.24 9.29-.06 13.92-1.33 1.78-3.92 1.84-5.83 2.7-2.86.88-5.63 2.05-8.55 2.73-2.24.82-3.57-2.75-1.56-3.76 3.12-1.45 6.55-2.08 9.7-3.46-4.53-5.47-12.03-8.07-19.02-7.52-7.45.53-14.44 4.97-18.24 11.38-3.59 5.9-4.28 13.42-1.95 19.9 2.06 5.83 6.52 10.78 12.13 13.38 6.52 3.08 14.48 2.94 20.86-.43 6.41-3.32 11.14-9.75 12.27-16.9.69-3.14-.13-6.37.28-9.52 1.08-1 2.2-1.08 3.38-.25.99 1.78.87 3.87.92 5.83.09 8.42-4.09 16.75-10.83 21.79-5.85 4.49-13.59 6.43-20.87 5.25-9.43-1.37-17.82-8.13-21.22-17.02-3.85-9.35-1.81-20.75 4.95-28.25C18.12 6.4 28.59 2.98 38.11 5.12c4.88.92 9.11 3.7 13.03 6.61.17-2.8-.15-5.63.26-8.41l.96-.9z">
+                        </path>
+                    </svg></div>
+            </div>
+
+
+            <div class="uicon prtclk micon rightIcon"><svg aria-hidden="true" focusable="false" data-prefix="fas"
+                    data-icon="chevron-right" class="svg-inline--fa fa-chevron-right " role="img"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-flip="false" data-invert="false"
+                    data-rounded="false" style="width: 10px; height: 10px; color: rgb(153, 153, 153);">
+                    <path fill="currentColor"
+                        d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z">
+                    </path>
+                </svg></div>
+        </div>
+        <div class="menuhr-box">
+            <div class="menuhr"></div>
+        </div>
+        <div class="menuopt" data-action="WALLNEXT">
+            <div class="spcont"></div>
+            <div class="nopt">Next desktop background</div>
+        </div>
+    </div>
+</body>
+
+</html>
