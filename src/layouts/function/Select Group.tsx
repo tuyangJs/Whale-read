@@ -2,7 +2,7 @@ import Modal from '@/pages/diydemo/Modal'
 import React, { memo, useEffect } from 'react';
 interface Props {
     open: boolean,
-    setOpen: any,
+    onCancel: any,
     openMsg: any,
     Filel: any[],
     callBack: (key: string,Filel:any[]) => void,
@@ -18,7 +18,7 @@ interface tab {
 const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label || '').toLowerCase().includes(input.toLowerCase());
 
-const App: React.FC<Props> = ({ open, callBack, Filel, setOpen, openMsg }) => {
+const App: React.FC<Props> = ({ open, callBack, Filel, onCancel, openMsg }) => {
     const [bookGroup, setbookGroup] = React.useState<tab[]>([]);
     const [status, setstatus] = React.useState<"" | "warning" | "error" | undefined>(undefined);
     const [newgroupShow, setnewgroupShow] = React.useState<boolean>(false);
@@ -59,7 +59,7 @@ const App: React.FC<Props> = ({ open, callBack, Filel, setOpen, openMsg }) => {
                return
             }
             callBack(selected,Filel) }}
-        onCancel={() => { setOpen(false) }}
+        onCancel={onCancel}
 
     >
         <List

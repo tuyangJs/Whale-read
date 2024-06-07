@@ -1,108 +1,167 @@
-import { useState } from 'react';
-import { FloatButton, Drawer, Slider, InputNumber, Col, Row, ColorPicker, AutoComplete } from 'antd';
+import { useEffect, useState } from 'react';
+import { Slider, InputNumber, Col, Row, ColorPicker, AutoComplete, Typography, Select, Radio, Switch } from 'antd';
+import typeface from '@/pages/setweb/typeface'
+import { DefaultOptionType } from 'antd/es/select';
+const { Title, Text } = Typography;
+const { Option } = Select;
 //阅读页面悬浮《页面设置按钮》与设置页面组件
-const options = [
-    { value: '微软雅黑' },
-    { value: '宋体' },
-    { value: '迷你简体' },
-];
-export default function PageSet() {
-    const [open, setOpen] = useState(false);
-    const [inputValue, setInputValue] = useState(11);
-    const showDrawer = () => {
-        setOpen(true);
-    }
+type cgType = {
+    fontWeight?: string;
+    Typevalue?: any,
+    fontSize?: number,
+    lineSpace?: number,
+    lineSpaceUnit?: string,
+    readColor?: number,
+    texture?: boolean
+}
+type prop = {
+    onChange: (data: any) => void
+    config: cgType
+}
+interface AfteProps {
+    onChange?: ((value: string, option: DefaultOptionType | DefaultOptionType[]) => void)
+    defaultValue?: string | null | undefined
+}
+const SelectAfter: React.FC<AfteProps> = ({ onChange, defaultValue }) => (
+    <Select onChange={onChange} defaultValue={defaultValue} style={{ width: 'aotu' }}>
+        <Option value="">默认</Option>
+        <Option value="em">字体高度</Option>
+        <Option value="px">像素</Option>
+    </Select>
+);
+const readColorL = [
+    { value: 0, Color: '#ebebeb' },
+    { value: 1, Color: '#ebe6da' },
+    { value: 2, Color: '#c9e0cb' },
+    { value: 3, Color: '#f6efef' },
+    { value: 4, Color: '#cedde1' },
+    { value: 5, Color: '#e3d0a1' },
+]
+export default function PageSet(props: prop) {
+    const { onChange, config } = props
+    console.log(config);
+    const { Typeface, Typevalue, TypefaceName } = typeface({ typefaces: config.Typevalue })
+    const [fontSize, setfontSize] = useState(config.fontSize);
+    const [lineSpace, setlineSpace] = useState(config.lineSpace);
+    const [fontWeight, setfontWeight] = useState(config.fontWeight);
+    const [readColor, setreadColor] = useState(config.readColor);
+    const [texture, settexture] = useState(config.texture);
+    const [lineSpaceUnit, setlineSpaceUnit] = useState(config.lineSpaceUnit ? config.lineSpaceUnit : '');
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onChange({ Typevalue,texture, fontSize, lineSpace, lineSpaceUnit, fontWeight, readColor });
+        }, 100);
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [Typevalue, texture, fontSize, readColor, lineSpace, lineSpaceUnit, fontWeight]);
 
-    const onClose = () => {
-        setOpen(false);
-    }
-    const onChange = (newValue: number) => {
-        setInputValue(newValue);
-    };
+
     return (
-        <div>
-            <Drawer title="页面设置" placement="right" onClose={onClose} open={open} style={{background:'#fff'}}>
-                <h3 > 字体</h3>
-                <h4 > 大小</h4>
-                <Row>
-                    <Col span={12}>
-                        <Slider
-                            min={6}
-                            max={26}
-                            onChange={onChange}
-                            value={typeof inputValue === 'number' ? inputValue : 0}
-                        />
-                    </Col>
-                    <Col span={4}>
-                        <InputNumber
-                            min={6}
-                            max={26}
-                            style={{ margin: '0 16px' }}
-                            value={inputValue}
-                            onChange={onChange}
-                        />
-                    </Col>
-                </Row>
-                <h4 > 类型</h4>
-                <AutoComplete
-                    style={{ width: 200 }}
-                    options={options}
-                    placeholder="微软雅黑"
-                    filterOption={(inputValue, option) =>
-                        option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                />
-                <h4>
-              行间距
-                </h4>
-                <InputNumber min={1} max={10} defaultValue={1} onChange={onChange} />
-                <h3>页面背景</h3>
-                <ColorPicker showText
-                    presets={[
-                        {
-                            label: '推荐背景',
-                            colors: [
-                                '#000000',
-                                '#000000E0',
-                                '#000000A6',
-                                '#00000073',
-                                '#00000040',
-                                '#00000026',
-                                '#0000001A',
-                                '#00000012',
-                                '#0000000A',
-                                '#00000005',
-                                '#F5222D',
-                                '#FA8C16',
-                                '#FADB14',
-                                '#8BBB11',
-                                '#52C41A',
-                                '#13A8A8',
-                                '#1677FF',
-                                '#2F54EB',
-                                '#722ED1',
-                                '#EB2F96',
-                                '#F5222D4D',
-                                '#FA8C164D',
-                                '#FADB144D',
-                                '#8BBB114D',
-                                '#52C41A4D',
-                                '#13A8A84D',
-                                '#1677FF4D',
-                                '#2F54EB4D',
-                                '#722ED14D',
-                                '#EB2F964D',
-                            ],
-                        },
-                        {
-                            label: '曾用背景',
-                            colors: [],
-                        },
-                    ]}
-                />
-              
-            </Drawer>
-            <FloatButton tooltip={<div>页面设置</div>} onClick={showDrawer} />
+        <div style={{ padding: '0 16px', paddingBottom: 8 }}>
+            <Title level={3}>
+                字体设置
+            </Title>
+            <Title level={4}>
+                大小
+            </Title>
+
+            <Row>
+                <Col span={12}>
+                    <Slider
+                        min={7}
+                        max={32}
+                        value={fontSize}
+                        onChange={setfontSize}
+                    />
+                </Col>
+                <Col span={4}>
+                    <InputNumber
+                        min={7}
+                        max={32}
+                        style={{ margin: '0 16px' }}
+                        value={fontSize}
+                    />
+                </Col>
+            </Row>
+            <Title level={4}>
+                行间距
+            </Title>
+            <Text type="secondary">最小为1，0为自动</Text>
+            <Row>
+                <Col span={12}>
+                    <Slider
+                        min={0}
+                        max={32}
+                        value={lineSpace}
+                        onChange={setlineSpace}
+                    />
+                </Col>
+                <Col span={12}>
+                    <InputNumber
+                        min={0} max={32}
+                        value={lineSpace}
+                        addonAfter={(<SelectAfter defaultValue={lineSpaceUnit} onChange={setlineSpaceUnit} />)}
+                        onChange={value => { setlineSpace(value ? value : 1) }}
+                        defaultValue={1} />
+                </Col>
+            </Row>
+            <Title level={4}>
+                字体
+            </Title>
+            <Typeface />
+            <br />
+            <Title level={5}>
+                字体预览：{TypefaceName}
+            </Title>
+            <Title level={4}>
+                字体粗细
+            </Title>
+            <Radio.Group onChange={e => {
+                setfontWeight(e.target.value)
+            }} defaultValue={fontWeight}>
+                <Radio.Button value="lighter">细</Radio.Button>
+                <Radio.Button value="normal">标准</Radio.Button>
+                <Radio.Button value="bold">粗</Radio.Button>
+                <Radio.Button value="bolder">加粗</Radio.Button>
+            </Radio.Group>
+            <Title level={3}>
+                页面主题
+            </Title>
+            <Title level={4}>
+                背景颜色
+            </Title>
+            <Text type="secondary">
+                选择颜色后，页面字体、背景等颜色都会智能匹配。
+            </Text>
+            <Radio.Group defaultValue={readColor} onChange={e => {
+                setreadColor(e.target.value)
+            }}>
+                {readColorL.map(data => (
+                    <Radio key={data.value} style={{ flexDirection: 'column-reverse', lineHeight: 0 }} value={data.value}>
+                        <div style={{
+                            backgroundColor: data.Color,
+                            borderRadius: '50%',
+                            marginBottom: 8,
+                            height: 26,
+                            width: 26,
+                        }} />
+                    </Radio>
+                ))}
+            </Radio.Group>
+
+            <Row align="middle">
+                <Col flex='1 1 auto'>
+                    <Title level={4} style={{margin:'12px 0'}}>
+                        背景纹理
+                    </Title>
+                </Col>
+                <Col  flex='0 0 auto' span={8}>
+                    <Switch defaultChecked={texture} onChange={settexture} />
+                </Col>
+            </Row>
+
+
         </div>
 
     )

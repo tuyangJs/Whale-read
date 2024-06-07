@@ -1,4 +1,3 @@
-import { useState } from "react";
 import './hanmburg.less'
 export default function Hamburgico(props: any) {
     const active = !props.expand ? 'active' : null

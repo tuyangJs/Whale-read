@@ -1,5 +1,5 @@
 
-import { UnorderedListOutlined, UserOutlined, AlignLeftOutlined, DownloadOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { UserOutlined, SendOutlined, AlignLeftOutlined } from '@ant-design/icons';
 import { Typography, Card, Divider, Space, Badge, Skeleton } from 'antd'
 import { Image } from 'antd';
 import imgerr from '@/assets/imgerr.svg'
@@ -22,18 +22,21 @@ const Presets = [
   { state: '完结', color: 'purple' },
   { state: '断更', color: 'yellow' }
 ]
-
-function BookBoxM(props: { bookinfo: Bookvar, intbook: any, onclick?: (data: object) => void }) {
+function BookBoxM(props: { bookinfo: Bookvar, onShow: (id: string | undefined, callBack: (int: any) => void) => void, onclick?: (data: object) => void }) {
   const bookRef = useRef<HTMLDivElement>(null);
-  const {intbook} = props
-  const { name, author, cover, label, intr, chapter, state ,id} = props.bookinfo
-  const [intrs, setintrs] = useState<string|null>(null);
+  const { onShow, bookinfo } = props
+  const [bookint, setbookint] = useState(bookinfo);
+  const { name, author, cover, label, chapter, state, id, intr: intrs } = bookint
+  const [intr, setintr] = useState(intrs)
   useEffect(() => {
     const obs = new IntersectionObserver((enteues) => {
       for (const entry of enteues) {
-        if(entry.isIntersecting){
-          intbook(id,(iny:string)=>{
-            setintrs(iny);
+        if (entry.isIntersecting) {
+          onShow(id, int => {
+            let bookints = bookint
+            bookints.intr = int
+            setbookint(bookints)
+            setintr(int)
           })
         }
       }
@@ -41,8 +44,14 @@ function BookBoxM(props: { bookinfo: Bookvar, intbook: any, onclick?: (data: obj
     if (bookRef.current) {
       obs.observe(bookRef.current)
     }
-  }, [])
+  }, [bookint, setbookint])
   const { onclick } = props
+  const styles = {
+    "backgroundImage": `url(${cover})`,
+    'backgroundPosition': '50% 50%',
+    'backgroundSize': 'cover',
+  } as React.CSSProperties;
+
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <Badge.Ribbon
@@ -51,62 +60,59 @@ function BookBoxM(props: { bookinfo: Bookvar, intbook: any, onclick?: (data: obj
         <Card
           ref={bookRef}
           hoverable
-          style={{ width: 416, minHeight: 195, /* marginTop: 16,marginRight: 16  */ }}
+          style={{ width: 416, borderRadius: 8, minHeight: 195, /* marginTop: 16,marginRight: 16  */ }}
           type='inner'
           bordered={false}
+          onClick={() => {
+            if (onclick) {
+              onclick(bookint)
+            }
+          }}
         >
           <Grid style={{ padding: 8, boxShadow: 'none', width: 143 }}>
-            <Image style={{ margin: 0, borderRadius: 6, height: 'calc(100% - 16px)' }}
-              alt={author}
-              src={cover}
-              placeholder
-              fallback={imgerr}
-              preview={{
-                toolbarRender: (
-                  _,
-                  {
-                    transform: { scale },
-                    actions: { onFlipY, onFlipX, onRotateLeft, onRotateRight, onZoomOut, onZoomIn },
-                  },
-                ) => (
-                  <Space size={12} className="toolbar-wrapper" >
-                    <SwapOutlined rotate={90} onClick={onFlipY} />
-                    <SwapOutlined onClick={onFlipX} />
-                    <RotateLeftOutlined onClick={onRotateLeft} />
-                    <RotateRightOutlined onClick={onRotateRight} />
-                    <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
-                    <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
-                  </Space>
-                ),
-              }}
+            <div style={{
+              width: 127,
+              margin: 0,
+              borderRadius: 8,
+              height: 179,
+              ...styles
+            }}
+
             />
           </Grid>
-          <Grid style={{ padding: '6px 8px', width: 263, boxShadow: 'none' }}
-            onClick={() => {
-              if (onclick) {
-                onclick(props.bookinfo)
-              }
-            }}
+          <Grid style={{
+            padding: '6px 8px',
+            width: 263,
+            boxShadow: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+
           >
             <>
               <Title level={5} style={{ margin: '2px 22px 2px 0' }} ellipsis={{ tooltip: true }} >{name}</Title>
-              <Text style={{ marginTop: 4 }} ellipsis={{ tooltip: true }}><UserOutlined style={{ marginRight: 4 }} />{author + '  '}  |  {
-                label.map((Text, i) => {
-                  return (
-                    (i == 0) ? Text : '·' + Text
-                  )
-                })
-              }</Text>
+              <Text style={{ marginTop: 4 }} ellipsis={{ tooltip: true }}>
+                <UserOutlined style={{ marginRight: 4 }} />{author}  </Text>
               <Divider plain={true} orientation="left" dashed style={{ margin: '4px 0' }} >
                 <AlignLeftOutlined style={{ marginRight: 10 }} />简介
               </Divider>
               <Paragraph type="secondary" style={{ margin: 0, textIndent: '1ch' }} ellipsis={{
                 rows: 3
               }}>
-                {intrs ? intrs : <Skeleton active={true} title={false} paragraph={{ rows: 2 }} />}
+                {intr ? intr.replace(/<br\s*\/?>|<\/?br>/gi, '') : <Skeleton active={true} title={false} paragraph={{ rows: 2 }} />}
               </Paragraph >
               <Divider dashed style={{ margin: '5px 0' }} />
-              <Text ellipsis={{ tooltip: true }}><UnorderedListOutlined style={{ marginRight: 5 }} />{chapter}</Text>
+              <Text ellipsis={true}>
+                <SendOutlined style={{ marginRight: 5 }} />
+
+                {(label.length > 0) ? label.map((Text, i) => {
+                  return (
+                    (i == 0) ? Text : '·' + Text
+                  )
+                }) : '暂无标签'
+                }
+              </Text>
             </>
           </Grid>
         </Card>
@@ -114,4 +120,4 @@ function BookBoxM(props: { bookinfo: Bookvar, intbook: any, onclick?: (data: obj
     </Space>
   )
 }
-export default  memo(BookBoxM)
+export default memo(BookBoxM)

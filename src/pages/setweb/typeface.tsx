@@ -1,6 +1,6 @@
-import { Cascader } from 'antd';
+import { Cascader, Input } from 'antd';
 import type { DefaultOptionType } from 'antd/es/cascader';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'umi';
 interface Option {
     value: string;
@@ -17,15 +17,20 @@ const filter = (inputValue: string, path: DefaultOptionType[]) =>
 
 interface ModalReturn {
     Typeface: React.FC;
-    typefaceName: any
+    TypefaceName: any
+    Typevalue: any
 }
-const typefaces = Hive.filedata('typeface')
-const App = (): ModalReturn => {
-    let compatibility = false
-    const location = useLocation()
-    if (location.pathname === '/setweb') {
-        compatibility = true
-    }
+type props = {
+    typefaces: any
+}
+
+const App = (prop: props): ModalReturn => {
+    const typefaces = prop.typefaces
+    /*   let compatibility = false
+      const location = useLocation()
+      if (location.pathname === '/setweb') {
+          compatibility = true
+      } */
 
     const options: Option[] = [
         {
@@ -38,56 +43,112 @@ const App = (): ModalReturn => {
             children: [
                 {
                     label: '极细',
-                    value: 'HarmonyOS_Sans_Thin',
+                    value: 'Thin',
                 },
                 {
                     label: '标准',
-                    value: 'HarmonyOS_Sans_Light',
+                    value: 'Light',
                 },
                 {
                     label: '手机标准',
-                    value: 'HarmonyOS_Sans_Regular',
+                    value: 'Regular',
                 },
                 {
                     label: '加粗',
-                    value: 'HarmonyOS_Sans_Medium',
+                    value: 'Medium',
                 },
                 {
                     label: '超粗',
-                    value: 'HarmonyOS_Sans_Bold',
+                    value: 'Bold',
                 },
             ]
         },
         {
-            value: 'Alimama',
-            label: compatibility ? '阿里妈妈（不兼容）' : '阿里妈妈',
-            disabled: compatibility,
+            value: 'FST',
+            label: '仿宋体',
             children: [
                 {
-                    label: '方圆体',
-                    value: 'Almama_Cuboid',
+                    label: '朝鲜日报明朝体',
+                    value: 'ChaoXianRiBaoMingChaoTi',
                 },
                 {
-                    label: '刀隶体',
-                    value: 'Almama_DaoLi',
+                    label: '汉字之美仿宋GBK',
+                    value: 'HanZiZhiMeiFangSongGBK',
+                },
+            ]
+        },
+        {
+            value: 'KT',
+            label: '楷体',
+            children: [
+                {
+                    label: '段宁毛笔小楷',
+                    value: 'DuanNingMaoBiXiaoKai',
                 },
                 {
-                    label: '东方大楷',
-                    value: 'Almama_DFdakai',
+                    label: '汉仪跃晰褚楷 简',
+                    value: 'HYYueXiChuKaiJ',
                 },
+            ]
+        },
+        {
+            value: 'XKT',
+            label: '行楷',
+            children: [
                 {
-                    label: '数黑体',
-                    value: 'Almama_NumberBlack',
-                }
+                    label: '陈爱军硬笔行楷_GB2312',
+                    value: 'ChenAiJunYingBiXingKaiJian',
+                },
             ]
         },
     ];
-    const [typefaceNames, setypefaceNames] = useState(typefaces)
-    const [value, setValue] = useState(typefaces.values)
-    const onChange = (values: any, sop: any) => {
-        setValue(values)
-        setypefaceNames({ values: values, sop: sop })
+    const [typefaceNames, setypefaceNames] = useState<any>()
+    function findLabelsByValues(valuesToFind: string[]) {
+        const valuesToFinds = valuesToFind
+        const foundLabels: string[] = [];
+        function findLabelRecursively(option: Option, values: string[]) {
+            if (values.length === 0) {
+                return; // 所有值都已经查找完毕，不再继续查找
+            }
+    
+            if (values.some(value => option.value.includes(value))) {
+                foundLabels.push(option.label);
+                valuesToFind = valuesToFind.filter(value => !option.value.includes(value)); // 移除已匹配的值
+            }
+    
+            if (option.children) {
+                for (const child of option.children) {
+                    findLabelRecursively(child, valuesToFind);
+                }
+            }
+        }
+    
+        for (const option of options) {
+            findLabelRecursively(option, valuesToFind);
+        }
+    
+        return (
+            <Input
+                bordered={false}
+                style={{ fontFamily: `${valuesToFinds[0]}${(valuesToFinds.length > 1) ? '_' + valuesToFinds[valuesToFinds.length - 1] : ''}`}}
+                value={foundLabels.join('_')}
+                placeholder="输入文本预览效果"
+            />
+        );
     }
+    
+
+
+    const [value, setValue] = useState(typefaces)
+    useEffect(() => {
+        setypefaceNames(findLabelsByValues(value))
+
+    }, [])
+    const onChange = (values: any, osp: any) => {
+        setValue(values)
+        setypefaceNames(findLabelsByValues(values))
+    }
+
     const Exbom: React.FC = () => (
         <Cascader
             style={{ width: 220 }}
@@ -100,7 +161,7 @@ const App = (): ModalReturn => {
         />
     )
 
-    return { Typeface: memo(Exbom), typefaceName: typefaceNames }
+    return { Typeface: memo(Exbom), Typevalue: value, TypefaceName: typefaceNames }
 }
 
 export default App

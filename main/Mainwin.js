@@ -10,7 +10,7 @@ let bookurl = null
 let title
 let bookData = {}
 const EPub = require("epub");
-const parameter = process.argv
+const  { argv, versions } =process
 ipcRenderer.on('ontitle', (e, titles) => {
     title = titles
 })
@@ -49,10 +49,10 @@ function debounce(func, delay) { //防抖函数
         }, delay);
     };
 }
-
+let Bookepub = {}
 nedata()
 let radyDom = {
-    Process: parameter,
+    Process: { argv, versions },
     filedata: (name, data) => {
         if (name === undefined) return
         if (data !== undefined) {
@@ -97,12 +97,23 @@ let radyDom = {
             eback(data)
         })
     },
+    soText: claaBack => {
+        ipcRenderer.on('soText', (e, data) => {
+            claaBack(data)
+        })
 
+    },
     change: () => {
         return ipcRenderer.invoke('getOStheme')
     },
     osdialog: (type, options) => {
         return ipcRenderer.invoke('dialog', type, options)
+    },
+    contents: (err, ...data) => {//浏览器对象
+        return ipcRenderer.invoke('webContents', err, ...data)
+    },
+    Notification: (err, ...data) => {//创建OS(操作系统)桌面通知
+        return ipcRenderer.invoke('osNotification', err, ...data)
     },
     onContextmenu: (eback) => {
         ipcRenderer.on('context-menu', (e, data) => {
@@ -156,10 +167,10 @@ let radyDom = {
                 bookData.user.index = {}
             }
             let targetIndex = bookData.user.index[targetname]
-
             if (!targetIndex) {
                 targetIndex = []
             }
+
             targetIndex.push(bookname)
             if (typeof current === 'string') {
                 const index = arr.indexOf(bookname);
@@ -183,7 +194,7 @@ let radyDom = {
 
     },
     path: path,
-    ImporBooks: (url, callBack) => {
+    ImporBooks: (url, callBack) => { //导入书籍
         try {
             let bookUrl = bookurl + '\\Books'
             let destination = `${bookUrl}\\${path.basename(url)}`
@@ -192,22 +203,193 @@ let radyDom = {
             } catch (error) {
                 fs.mkdirSync(bookUrl)
             } finally {
-                fs.copyFile(url, destination, (err) => {
-                    if (err) throw err;
-                    callBack(err)
-                });
+                GetBooks(url, epub => {
+                    let UUID = epub?.metadata?.UUID
+                    if (UUID) {
+                        fs.copyFile(url, destination, (err) => {
+                            if (err) throw err;
+                            console.log(url, UUID);
+                            callBack(UUID)
+                        });
+                    } else {
+                        callBack(false)
+                    }
+                })
             }
         } catch (error) {
             console.error(error);
         }
 
-    }
+    },
+    LoadingBooks: LoadingBooks,//初始化书库书籍
+    GetBooks: GetBooks,//获取书籍
+    GetbookEpub: () => {
+        return Bookepub
+    },
+    getBookimg: getBookimg,
+    getBookSchedule: getBookSchedule,
 
 }
-function GetBooks() {//获取书籍
-    
-    let epub = new EPub(epubfile, imagewebroot, chapterwebroot);
+
+async function LoadingBooks(callBack) {//初始化书库书籍
+    try {
+        const promises = [];
+        await bookData.user?.grouping.forEach(text => {
+            Bookepub[text] = {}
+            bookData.user.index[text]?.forEach(bookname => {
+                const promise = new Promise((resolve) => {
+                    GetBooks(bookname, epub => {
+                        if (typeof epub === 'string') {
+                            Bookepub[text][bookname] = `【${bookname}】载入失败`;
+                        } else {
+                            Bookepub[text][bookname] = epub;
+                        }
+
+                        resolve();
+                    });
+                });
+                promises.push(promise);
+            });
+        });
+
+        // 使用 Promise.all 等待所有异步操作完成
+        await Promise.all(promises);
+        if (callBack) callBack();
+    } catch (error) {
+    } finally {
+
+    }
 }
+LoadingBooks()
+const util = require('util');
+const mkdir = util.promisify(fs.mkdir);
+async function GetBooks(Bookfile, chapterId, callBack) {
+    const writeFile = util.promisify(fs.writeFile);
+    const epubFile = isFilePath(Bookfile) ? Bookfile : `${bookurl}/Books/${Bookfile}.epub`;
+    const epubBook = await new EPub(epubFile, 'blob:', `${location.host}/read`);
+    try {
+        if (typeof chapterId === "function") {
+            // 如果第三参数是一个回调函数
+            callBack = chapterId;
+            epubBook.on("end", async function () {
+                // 缓存书籍数据
+                const manifest = Object.values(epubBook.manifest);
+                for (const fest of manifest) {
+                    const bookdataf = `${bookurl}/Books/${epubBook.metadata.title}-${epubBook.metadata.UUID}/image`;
+                    if (fest['media-type'] === 'image/jpeg') {
+                        if (!isFilePath(bookdataf)) {
+                            await mkdir(bookdataf, { recursive: true });
+                            let imgf = `${bookdataf}/${fest.href}`;
+                            const festID = fest.id
+                            try {
+                                if (!isFilePath(imgf) && fest.id) {
+                                    await epubBook.getImage(festID, (error, img, mimeType) => {
+                                        if (mimeType) {
+                                            writeFile(imgf, img, err => {
+
+                                            });
+                                        }
+                                    })
+
+                                }
+                            } catch (error) {
+                                console.error(error);
+                            }
+
+                        }
+                    }
+                }
+                callBack(epubBook);
+            });
+            epubBook.parse();
+        } else if (typeof chapterId === "string") {
+            // 如果第三参数是字符串，假设它是章节ID
+            try {
+                epubBook.on("end", function () {
+
+                    epubBook.getChapter(chapterId, (err, chapterContent) => {
+                        if (chapterContent) {
+                            try {
+                                callBack(chapterContent);
+                            }
+                            catch (error) {
+                                console.error(error);
+                            }
+                        } else {
+                            callBack(err);
+                        }
+                    });
+                });
+                epubBook.parse();
+            } catch (error) {
+                console.error(error);
+            }
+
+        }
+    } catch (error) {
+        callBack('载入失败:' + Bookfile);
+        console.error(error, epubFile);
+    }
+}
+function isFilePath(path) { //判断是否为存在路径文件
+    try {
+        const stats = fs.statSync(path);
+        return stats.isFile();
+    } catch (error) {
+        return false;
+    }
+}
+//获取书籍图像
+function getBookimg(name, imgname) {
+    const imgurls = `${bookurl}/Books/${name.trim()}/image/${imgname}`
+    // 读取图像文件
+    try {
+        const data = fs.readFileSync(imgurls)
+        // 将图像数据转换为Base64编码
+        const base64Image = Buffer.from(data).toString('base64');
+        // 在这里可以将base64Image发送给前端使用
+        return (`data:image/jpeg;base64,${base64Image}`);
+    } catch (error) {
+        // console.error(error);
+        return
+    }
+}
+//保存和获取阅读进度
+function getBookSchedule(dataurl, datas) {
+    const dataFilePath = path.join(bookurl, 'Books', dataurl.trim(), 'data.json');
+    let data = { Chapters: 0, NumberPss: 0 };
+    try {
+        // 读取数据文件
+        const rawData = fs.readFileSync(dataFilePath, 'utf8');
+        data = JSON.parse(rawData);
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            // 文件不存在，创建文件并写默认数据
+            fs.mkdir(path.join(bookurl, 'Books', dataurl.trim()), { recursive: true }, () => {
+                fs.writeFile(dataFilePath, JSON.stringify(data), () => { });
+            });
+        } else {
+            // 其他错误，可以根据需要进行处理
+            console.error(error);
+        }
+    }
+    // 更新数据
+    const { Chapters, NumberPss } = datas ? datas : data
+    if (typeof Chapters === 'number') {
+        data.Chapters = Chapters;
+    }
+    if (typeof NumberPss === 'number') {
+        data.NumberPss = NumberPss;
+    }
+
+    // 保存数据
+    if (datas)   // 保存数据
+        fs.writeFile(dataFilePath, JSON.stringify(data), () => { })
+
+    return data;
+}
+
+
 contextBridge.exposeInMainWorld(
     'Hive',
     radyDom

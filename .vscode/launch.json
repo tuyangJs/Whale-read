@@ -13,13 +13,17 @@
     {
       "name": "页面",
       "type": "node",
-      "request": "launch",
+     "debugServer": 8200,
+     "showAsyncStacks": true,
       "preLaunchTask": {
         "type": "npm",
-        "script": "dev"
-      }
+        "script": "uiDev"
+      },
+      "stopOnEntry": true  ,// 表示不等待
+      "restart":true,
     },
     {
+
       "name": "Electron",
       "type": "node",
       "request": "launch",

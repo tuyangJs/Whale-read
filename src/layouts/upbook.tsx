@@ -18,6 +18,10 @@ const options = {
     { name: '书籍格式', extensions: ['epub'] },
   ]
 }
+let Upoptions: string
+options.filters.forEach(element => {
+  Upoptions += `.${element.extensions},`
+});
 const msgKey = 'openbook_5a4s1'
 
 const App: React.FC<Props> = ({ dosShow, openMsg }) => {
@@ -28,7 +32,7 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
     openMsg({
       key: msgKey,
       type: 'loading',
-      content: '等待导入书籍文件',
+      content: '等待导入文件',
       duration: 0,
     })
     //@ts-ignore 打开系统对话框
@@ -37,7 +41,7 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
         openMsg({
           key: msgKey,
           type: 'info',
-          content: '取消导入书籍',
+          content: '取消导入',
           duration: 4,
         })
       } else {  //对话框打开文件导入
@@ -57,7 +61,7 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
   }
   const props: UploadProps = {
     name: 'file',
-    accept: '.epub',
+    accept: Upoptions,
     openFileDialogOnClick: false,
     multiple: true,
     fileList: [],
@@ -69,11 +73,15 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
           File: key['originFileObj']?.path
         })
       })
-
       SelectGroup(bookl)
     },
     onDrop(info) {
-      console.log(info);
+      openMsg({
+        key: msgKey,
+        type: 'warning',
+        content: '格式不受支持的文件!',
+        duration: 3,
+      })
     }
   };
   function SelectGroup(url: { name: string; File: string; }[]) {
@@ -86,8 +94,12 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
     setFilel(url)
     setshowSelect(true)
   }
-  const ImporBooks = (keys: string, Filel: any[]) => { //导入书籍处理
+  const ImporBooks = (keys: string, Filel: any[]) => { //导入处理
     setshowSelect(false)
+    upepub(keys, Filel)
+  }
+  //书籍格式导入处理
+  function upepub(keys: string, Filel: any[]) {
     openMsg({
       key: msgKey,
       type: 'loading',
@@ -97,7 +109,7 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
     Filel.forEach((key, i) => {
       Hive.Mobilegroup(Number(keys), key.name)
       Hive.ImporBooks(key.File, (err: any) => {
-        if (err) {
+        if (!err) {
           openMsg({
             type: 'error',
             content: `${key.name} 导入失败！${err}`,
@@ -136,7 +148,16 @@ const App: React.FC<Props> = ({ dosShow, openMsg }) => {
         setactive(false)
       }}
     >
-      <Select callBack={ImporBooks} Filel={Filel} open={showSelect} openMsg={openMsg} setOpen={setshowSelect} />
+      <Select callBack={ImporBooks}
+        Filel={Filel}
+        open={showSelect}
+        openMsg={openMsg}
+        onCancel={() => {
+          console.log(1);
+
+          openMsg(msgKey)
+          setshowSelect(false)
+        }} />
       <Tooltip title="由此导入本地书籍">
         <div onClick={Newbook}>
           <Dragger className='dragger'  {...props} >

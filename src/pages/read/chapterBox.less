@@ -1,0 +1,23 @@
+.style_card:before {
+    background: var(--c-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px -2px rgba(96, 96, 96, .15), 0 0 1px 0 rgba(96, 96, 96, .31);
+    content: "";
+    display: block;
+    height: 100%;
+    left: 4px;
+    position: absolute;
+    top: 0;
+    transform: rotate(-4deg);
+    transition: transform .3s;
+    width: calc(100% - 8px)
+}
+
+.style_card {
+    position: relative;
+    width: 100%;
+}
+
+.style_card:hover:before {
+    transform: rotate(-6deg);
+}

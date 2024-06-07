@@ -1,13 +1,42 @@
 import React, { useState } from 'react';
-import { Row, Col, Card, Segmented, Button, message } from 'antd';
+import { Row, Col, Segmented, Button, message } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import { BranchesOutlined, BarsOutlined, FormOutlined, BookOutlined, InboxOutlined } from '@ant-design/icons'
-
+import { APPinfo, AppBox } from "./AppBox"
+import { Flexs } from '@/module/FlexsAnim'
+const Apptab: APPinfo[] = [{
+  name: '开发者支持',
+  author: '芯阅言文',
+  intro: '为开发者提供一套快速开发流程的工具',
+  edition: '1.0.5',
+  tag: ['开发工具', '套件'],
+  logo: '',
+  Appid: "a",
+},
+{
+  name: '笔趣阁书源',
+  author: '芯阅言文',
+  intro: '为开发者提供一套快速开发流程的工具',
+  edition: '1.0.5',
+  tag: ['开发工具', '套件'],
+  logo: '',
+  Appid: "b",
+},
+{
+  name: '笔迹',
+  author: '芯阅言文',
+  intro: '为开发者提供一套快速开发流程的工具',
+  edition: '1.0.5',
+  tag: ['开发工具', '套件'],
+  logo: '',
+  Appid: "c",
+}
+]
 const App: React.FC = () => {
   const [value, setValue] = useState<string | number>(0)
   const [messageApi, contextHolder] = message.useMessage();
   //重封装消息提示函数
-  function msgint (params:any) {
+  function msgint(params: any) {
     messageApi.open({
       ...params,
       style: { marginTop: '5vh', },
@@ -46,7 +75,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="example">
+    <div className="example" style={{ width: '100%' }}>
       {contextHolder}
       <QueueAnim type='scale' delay={10} >
         <div key='a'>
@@ -92,26 +121,28 @@ const App: React.FC = () => {
 
 
         </div>
+        <div key='b' style={{
+          marginTop:12
+        }}>
+          <Flexs Flexpos={
+            {
+              vertical: false,
+              wrap: 'wrap',
+              gap: '16px 8px',
+            }}
+            IProps={{
+              type: 'scale',
+              delay: 160
+            }}
+          >
+            {Apptab.map((info, i) => (
+              <div key={`App_${i}`}>
+                <AppBox {...info}/>
+              </div>
 
-        <div key='b'>
-          <Row style={{ marginTop: 10 }}>
-            <Col flex="360px">
-              <Card hoverable={true} style={{ height: 120 }}>
-                <Card.Grid hoverable={false} style={{ padding: 0, width: 120, boxShadow: 'none' }}>
-                  <img
-                    style={{ margin: 8, width: '-webkit-fill-available' }}
-                    src="https://img1.baidu.com/it/u=1240466764,3606188766&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="" />
-                </Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: 238, margin: ' 22px 0', padding: 0, boxShadow: 'none' }} >
-                  <Card.Meta
-                    title="笔趣阁书源"
-                    description="This is the description"
-                  />
-                </Card.Grid>
-              </Card>
-            </Col>
-            <Col flex="auto">Fill Rest</Col>
-          </Row>
+            ))}
+          </Flexs>
+
         </div>
 
       </QueueAnim>
