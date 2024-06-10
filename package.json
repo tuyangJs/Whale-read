@@ -3,14 +3,14 @@
   "author": "",
   "main": "main/index.js",
   "homepage": "./",
-  "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi setup",
-    "setup": "umi setup",
-    "uiDev":"npm run dev",
-    "start": "electron. && npm run uiDev"
-  },
+ "scripts": {
+  "dev": "umi dev",
+  "build": "umi build",
+  "postinstall": "umi setup",
+  "setup": "umi setup",
+  "uiDev": "umi dev",
+  "start": "node start.js"
+},
   "dependencies": {
     "@ant-design/happy-work-theme": "^1.0.0",
     "@ant-design/icons": "^5.3.7",
